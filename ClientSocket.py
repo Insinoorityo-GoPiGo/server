@@ -92,10 +92,8 @@ class ClientSocket(ClientCommands):
 
         self.current_node = self.path[self.current_node_marker]
 
-        try:
+        if self.next_node_marker <= len(self.path) - 1:
             self.next_node = self.path[self.next_node_marker]
-        except:
-            pass
 
         #print("Location updated.")
 
