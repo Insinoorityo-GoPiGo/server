@@ -100,15 +100,16 @@ class ClientSocket(ClientCommands):
     def reverse_path(self):
         self.path = list(reversed(self.path))
 
-    def drive_back(self):
-        self.reverse_path()
-
+    def reset_node_markers(self):
         self.current_node_marker = 0
         self.next_node_marker = self.current_node_marker + 1
 
         self.current_node = self.path[self.current_node_marker]
         self.next_node = self.path[self.next_node_marker]
 
+    def drive_back(self):
+        self.reverse_path()
+        self.reset_node_markers()
         self.drive_path()
 
     def drive_path(self):
