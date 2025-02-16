@@ -97,10 +97,10 @@ class ClientSocket(ClientCommands):
 
         #print("Location updated.")
 
-    def drive_back(self):
-
+    def reverse_path(self):
         self.path = list(reversed(self.path))
-        print("Reversed path: ",self.path)
+
+    def drive_back(self):
 
         self.current_node_marker = 0
         self.next_node_marker = self.current_node_marker + 1
