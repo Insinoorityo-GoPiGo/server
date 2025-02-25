@@ -1,3 +1,5 @@
+from typing import Union
+
 from Graph import Graph
 
 class PathFinding:
@@ -38,10 +40,19 @@ class PathFinding:
 
         return graph
     
-    def get_shortest_path(self):
+    def get_shortest_path(self, start: Union[str,None], end: Union[str,None]) -> list:
+        
+        if start == None:
+            start = input("Enter the start node: ")
+        else:
+            start = start
+        
+        if end == None:
+            end = input("Enter the end node: ")
+        else:
+            end = end
+
         graph = self.parse_graph()
-        start = input("Enter the start node: ")
-        end = input("Enter the end node: ")
 
         if start not in graph.nodes or end not in graph.nodes:
             print("Invalid start or end node.")

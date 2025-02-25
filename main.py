@@ -1,13 +1,9 @@
 from PathFinding import PathFinding
-from ClientController import ClientController
+from ClientAPI import ClientAPI
 
 def main():
-    path_finding = PathFinding()
-    path = path_finding.get_shortest_path()
-
-    client_controller = ClientController(path=path)
-    client_controller.add_client(client_id=1)
-    client_controller.begin_client(client_id=1)
+    path = PathFinding().get_shortest_path(start="A1", end="F9")
+    client_api = ClientAPI(host="127.0.0.1", port=1025, path=path)
 
 if __name__ == "__main__":
     main()
