@@ -2,6 +2,7 @@ import socket
 import threading
 from time import sleep
 from string import ascii_letters
+import json
 
 class ClientAPI():
     def __init__(self, host, port, path, default_direction="north"):
@@ -18,7 +19,7 @@ class ClientAPI():
 
         print(f"Connection established with {self.client_address}")
 
-        #GoPiGo control stuff
+        #Client control stuff
         self.path = path
 
         self.current_node_marker = 0
@@ -68,35 +69,35 @@ class ClientAPI():
 
         if where_from == "north":
             if to_where == "east":
-                command = "turn right"
+                command = "TURN_RIGHT"
             if to_where == "south":
-                command = "turn twice right"
+                command = "TURN_TWICE_RIGHT"
             if to_where == "west":
-                command = "turn left"
+                command = "TURN_LEFT"
 
         if where_from == "east":
             if to_where == "north":
-                command = "turn left"
+                command = "TURN_LEFT"
             if to_where == "south":
-                command = "turn right"
+                command = "TURN_RIGHT"
             if to_where == "west":
-                command = "turn twice right"
+                command = "TURN_TWICE_RIGHT"
 
         if where_from == "south":
             if to_where == "east":
-                command = "turn left"
+                command = "TURN_LEFT"
             if to_where == "west":
-                command = "turn right"
+                command = "TURN_RIGHT"
             if to_where == "north":
-                command = "turn twice right"
+                command = "TURN_TWICE_RIGHT"
 
         if where_from == "west":
             if to_where == "north":
-                command = "turn right"
+                command = "TURN_RIGHT"
             if to_where == "east":
-                command = "turn twice right"
+                command = "TURN_TWICE_RIGHT"
             if to_where == "south":
-                command = "turn left"
+                command = "TURN_LEFT"
 
         #Update where gopigo is facing.
         self.gopigo_direction = to_where
@@ -127,7 +128,7 @@ class ClientAPI():
 
     def logic_loop(self):
         if self.current_node_marker == 0:
-            #TODO: Send a check to GoPiGo to make sure it's ready
+            #TODO: Send a check to client to make sure it's ready
             #TODO: Receive a ready confirmation
             print("At first node. GoPiGo started")
         
@@ -179,11 +180,24 @@ class ClientAPI():
             return "error"
 
     def send_command(self, command):
-        """Sends a command to the client."""
+        command_type = None
+
+        if command == "TURN_RIGHT" or command == "TURN_TWICE_RIGHT" or command == "TURN_LEFT" or command == "DRIVE_FORWARD":
+            command_type = "COMMAND"
+        elif command == "ARE_YOU_READY":
+            command_type = "CHECK"
+
+        command_json = json.dumps(
+            {
+                "type": command_type,
+                "command": command
+            }
+        )
+
         try:
-            self.client_socket.sendall(command.encode())
+            self.client_socket.sendall(command_json.encode())
         except Exception as e:
-            print(f"Error sending command: {e}")
+            print(f"Error sending command: {e}") #Maybe some error handling here
 
     def stop_listening(self):
         self.listening = False
