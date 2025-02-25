@@ -65,7 +65,7 @@ class ClientAPI():
     def is_gopigo_facing_next_node(self, cardinal_direction):
         return self.gopigo_direction == cardinal_direction
 
-    def turn_gopigo(self, where_from, to_where):
+    async def turn_gopigo(self, where_from, to_where):
 
         if where_from == "north":
             if to_where == "east":
@@ -99,18 +99,23 @@ class ClientAPI():
             if to_where == "south":
                 command = "TURN_LEFT"
 
-        #Update where gopigo is facing.
-        self.gopigo_direction = to_where
+        self.gopigo_direction = to_where #Update where gopigo is facing.
+        
+        self.send_command(command=command) #Send a command to client to turn in the desired direction
+        
+        if await self.receive_message_from_client() == "TURN_OK": #Receive a confirmation that the client has executed the turning command
+            pass
+        else:
+            print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
 
-        print(command)
-        #TODO: Send a command to client to turn in the desired direction
-        #TODO: Receive a confirmation that the client has executed the turning command
-    
-
-    def drive_forward(self):
-        #TODO: Send a command for client to drice forward.
-        #TODO: Receive a confirmation from client that it has started driving forward.
-        pass
+    async def drive_forward(self):
+        self.send_command(command="DRIVE_FORWARD") #Send a command for client to drice forward.
+        
+        if await self.receive_message_from_client() == "DRIVE_OK": #Receive a confirmation from client that it has started driving forward.
+            pass
+        else:
+            print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
+        
 
     def update_location(self):
         self.current_node_marker = self.current_node_marker + 1
@@ -126,10 +131,15 @@ class ClientAPI():
             self.logic_loop()
             self.drive_back()
 
-    def logic_loop(self):
+    async def logic_loop(self):
         if self.current_node_marker == 0:
-            #TODO: Send a check to client to make sure it's ready
-            #TODO: Receive a ready confirmation
+            self.send_command(command="ARE_YOU_READY") #Send a check to client to make sure it's ready
+            
+            if await self.receive_message_from_client() == "I_AM_READY": #Receive a ready confirmation from client
+                pass
+            else:
+                print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
+            
             print("At first node. GoPiGo started")
         
         for node in self.path:
@@ -164,10 +174,10 @@ class ClientAPI():
         self.reset_node_markers()
         self.logic_loop()
 
-    def receive_message_from_client(self):
+    async def receive_message_from_client(self):
         try:
             if self.listening:
-                message = self.client_socket.recv(1024).decode()
+                message = await self.client_socket.recv(1024).decode()
                 print(f"Client: {message}")
 
                 if not message: #Stop if client disconnects, make better: client_disconnected() listening = False
@@ -179,7 +189,7 @@ class ClientAPI():
             print(f"Error: {e}")
             return "error"
 
-    def send_command(self, command):
+    def send_command(self, command: str):
         command_type = None
 
         if command == "TURN_RIGHT" or command == "TURN_TWICE_RIGHT" or command == "TURN_LEFT" or command == "DRIVE_FORWARD":
