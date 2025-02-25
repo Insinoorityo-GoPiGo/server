@@ -3,8 +3,6 @@ import threading
 from time import sleep
 from string import ascii_letters
 
-from ClientControl import ClientControl
-
 class ClientAPI():
     def __init__(self, host, port, path, default_direction="north"):
         
