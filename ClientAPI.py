@@ -243,6 +243,7 @@ class ClientAPI():
         self.listening = False
 
     def close_connection(self):
+        self.send_command(command="SHUTDOWN")
         self.stop_listening()
         self.client_socket.close()
         self.server_socket.close()
