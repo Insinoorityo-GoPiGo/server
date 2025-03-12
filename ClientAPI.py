@@ -46,7 +46,6 @@ class ClientAPI():
         confirmation = re.sub(pattern='"', repl='', string=confirmation)
         return expected == confirmation
 
-
     def check_next_node(self):
         print(self.current_node)
         print(self.next_node)
@@ -130,7 +129,6 @@ class ClientAPI():
             pass
         else:
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
-        
 
     def update_location(self):
         self.current_node_marker = self.current_node_marker + 1

@@ -7,8 +7,6 @@ from ClientAPI import ClientAPI
 
 quit_flag = Event()
 
-loop = asyncio.get_event_loop()
-
 async def main():
     path = PathFinding().get_shortest_path(start="A1", end="F9")
     client_api = ClientAPI(host="127.0.0.1", port=1025, path=path, quit_flag=quit_flag)
