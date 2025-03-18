@@ -10,8 +10,6 @@ from ClientAPI import ClientAPI
 quit_flag = threading.Event()
 location_queue = queue.Queue()
 
-
-
 async def run_logic(client_api):
     print("In run_logic")
     await client_api.logic()
@@ -29,9 +27,6 @@ def main():
     map = Map(queue=location_queue, stop_loop_event=quit_flag)
     client_api = ClientAPI(host="192.168.x.x", port=1025, path=path, quit_flag=quit_flag, location_queue=location_queue)
 
-
-
-    #loop.run_until_complete(future=client_api.logic())
     print("Before await client_api.logic()")
     start_thread(client_api=client_api)
     print("After await client_api.logic()")

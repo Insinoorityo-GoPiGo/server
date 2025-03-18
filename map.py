@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import time
 from queue import Queue, Empty
 
-
-
 class Map:
     def __init__(self, queue, stop_loop_event):
         self.queue = queue
@@ -63,7 +61,6 @@ class Map:
             return None
 
     def update_graph(self):
-
         self.ax.clear()
         node_colors = ["green" if node == self.highlight_node else "red" for node in self.G.nodes]
         nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color='gray', ax=self.ax)
@@ -97,6 +94,3 @@ class Map:
 
         plt.ioff()
         plt.show()
-
-
-    
