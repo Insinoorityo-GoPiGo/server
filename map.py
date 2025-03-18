@@ -70,7 +70,7 @@ class Map:
     def set_highlight(self, location):
         if location in self.G.nodes:
             print(f"Highlight node: {location}")
-            self.highlight_node = location
+            self.highlight_node = location #Is the highlighted node
             self.update_graph()
         else:
             print(f" Virhe: Nodea {location} ei löydy.")
