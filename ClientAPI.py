@@ -132,8 +132,6 @@ class ClientAPI():
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
 
     def update_location(self):
-        self.location_queue.put(self.current_node, block=True) #Vaikka tässä?
-        
         self.current_node_marker = self.current_node_marker + 1
         self.next_node_marker = self.current_node_marker + 1
 
@@ -141,6 +139,9 @@ class ClientAPI():
 
         if self.next_node_marker <= len(self.path) - 1:
             self.next_node = self.path[self.next_node_marker]
+
+    def send_location_to_map(self):
+        self.location_queue.put(self.current_node, block=True) #Vaikka tässä?
 
     async def logic(self):
         print("In ClientAPI.logic(), before while")
@@ -176,6 +177,7 @@ class ClientAPI():
 
             cardinal_direction = self.check_next_node() #Where the enxt node is: north (1), east (2), south (3), west (4)
 
+            self.send_location_to_map()
             self.update_location()
 
             if self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):

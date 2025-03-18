@@ -43,7 +43,7 @@ class Map:
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
 
-        self.highlight_node = None
+        self.highlight_node = "A1" #None
         self.fig, self.ax = plt.subplots()
         plt.ion()
         self.update_graph()

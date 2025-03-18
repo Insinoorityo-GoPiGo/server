@@ -34,7 +34,7 @@ def start_map_thread(map):
 
 def main():
     path = PathFinding().get_shortest_path(start="A1", end="F9")
-    map = Map(queue=location_queue)
+    map = Map(queue=location_queue, stop_loop_event=quit_flag)
     client_api = ClientAPI(host="127.0.0.1", port=1025, path=path, quit_flag=quit_flag, location_queue=location_queue)
 
 
