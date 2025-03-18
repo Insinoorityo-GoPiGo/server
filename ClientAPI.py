@@ -7,11 +7,12 @@ import asyncio
 import re
 
 class ClientAPI():
-    def __init__(self, host, port, path, quit_flag, default_direction="north"):
+    def __init__(self, host, port, path, quit_flag, location_queue, default_direction="north"):
         
         #Client control stuff
         self.quit_flag = quit_flag
-
+       
+        self.location_queue = location_queue
         #server stuff
         self.HOST = host
         self.PORT = port
@@ -131,6 +132,8 @@ class ClientAPI():
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
 
     def update_location(self):
+        self.location_queue.put(self.current_node)
+        
         self.current_node_marker = self.current_node_marker + 1
         self.next_node_marker = self.current_node_marker + 1
 
