@@ -4,12 +4,10 @@ import asyncio
 import queue 
 from map import Map
 
-
 from PathFinding import PathFinding
 from ClientAPI import ClientAPI
 
 quit_flag = threading.Event()
-
 location_queue = queue.Queue()
 
 
