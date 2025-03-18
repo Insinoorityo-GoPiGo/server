@@ -132,7 +132,7 @@ class ClientAPI():
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
 
     def update_location(self):
-        self.location_queue.put(self.current_node)
+        self.location_queue.put(self.current_node, block=True) #Vaikka tässä?
         
         self.current_node_marker = self.current_node_marker + 1
         self.next_node_marker = self.current_node_marker + 1
