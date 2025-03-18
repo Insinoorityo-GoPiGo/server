@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import time
 from queue import Queue, Empty
 
+
+
 class Map:
     def __init__(self, queue, stop_loop_event):
         self.queue = queue
@@ -43,15 +45,17 @@ class Map:
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
 
-        self.highlight_node = "A1" #None
+        self.highlight_node = None
+        
         self.fig, self.ax = plt.subplots()
         plt.ion()
         self.update_graph()
+        print("map init complete")
 
     def get_location(self) -> str | None:
         """Hakee sijainnin jonosta, jos se ei ole tyhjä"""
         try:
-            location = self.queue.get(block=False)  # Hakee jonosta ilman odotusta
+            location = self.queue.get(block=True)  # Hakee jonosta ilman odotusta
             print(f" Queue: {location}")
             return location
         except Empty:
@@ -76,10 +80,12 @@ class Map:
             print(f" Virhe: Nodea {location} ei löydy.")
 
     def run(self):
+        print("map started")
         while True:
             server_input = self.get_location()
 
             if server_input is None:
+                print("No input from server")
                 time.sleep(0.5)  # Odotetaan, jos jono on tyhjä
                 continue  
 
