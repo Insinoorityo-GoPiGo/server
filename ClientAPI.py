@@ -138,6 +138,7 @@ class ClientAPI():
             self.next_node = self.path[self.next_node_marker]
 
     def send_location_to_map(self):
+        print("current Location:", self.current_node)
         self.location_queue.put(self.current_node, block=True) #Vaikka tässä?
 
     async def logic(self):
