@@ -10,22 +10,8 @@ class ClientAPI():
     def __init__(self, host, port, path, quit_flag, location_queue, default_direction="north"):
         
         #Client control stuff
-        self.quit_flag = quit_flag
-       
         self.location_queue = location_queue
-        #server stuff
-        self.HOST = host
-        self.PORT = port
 
-        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind((host, port))
-
-        self.server_socket.listen(1) #Allow only 1 connection
-        print("Listening for a connection.")
-        self.client_socket, self.client_address = self.server_socket.accept()
-        print(f"Connection established with {self.client_address}")
-
-        #Client control stuff
         self.path = path
 
         self.current_node_marker = 0
@@ -38,9 +24,20 @@ class ClientAPI():
         self.gopigo_direction = default_direction
 
         #server stuff
+        self.quit_flag = quit_flag
+
+        self.HOST = host
+        self.PORT = port
+
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((self.HOST, self.PORT))
+
+        self.server_socket.listen(1) #Allow only 1 connection
+        print("Listening for a connection.")
+        self.client_socket, self.client_address = self.server_socket.accept()
+        print(f"Connection established with {self.client_address}")
+        
         self.listening = True
-        #self.listener_thread = threading.Thread(target=self.logic, daemon=True)
-        #self.listener_thread.start()
         print("__init__() done.")
 
     def confirm(self, expected, confirmation) -> bool:
