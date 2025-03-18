@@ -1,11 +1,15 @@
 import threading
 from time import sleep
 import asyncio
-import queue 
-from map import Map
+import queue
+from dotenv import load_dotenv
+import os
 
+from map import Map
 from PathFinding import PathFinding
 from ClientAPI import ClientAPI
+
+load_dotenv()
 
 quit_flag = threading.Event()
 location_queue = queue.Queue()
@@ -25,13 +29,14 @@ def start_thread(client_api):
 def main():
     path = PathFinding().get_shortest_path(start="A1", end="C3")
     map = Map(queue=location_queue, stop_loop_event=quit_flag)
-    client_api = ClientAPI(host="192.168.x.x", port=1025, path=path, quit_flag=quit_flag, location_queue=location_queue)
+    client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=1025, path=path, quit_flag=quit_flag, location_queue=location_queue)
 
     print("Before await client_api.logic()")
     start_thread(client_api=client_api)
     print("After await client_api.logic()")
     
     map.run()
+
     while True:
         sleep(0.5)
         if quit_flag.is_set():
