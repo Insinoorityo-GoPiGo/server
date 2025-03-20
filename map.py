@@ -4,14 +4,14 @@ import time
 from queue import Queue, Empty
 
 class Map:
-    def __init__(self, queue, stop_loop_event):
+    def __init__(self, queue, quit_flag):
         self.queue = queue
-        self.stop_loop_event = stop_loop_event
+        self.quit_flag = quit_flag
 
         # Määritellään graafi
         self.G = nx.Graph()
         self.points = {
-             "L 1": (-1, 6), "L 2": (0, -1), "L 3": (9, 0),
+            "A0": (-1, 6), "L2": (0, -1), "L3": (9, 0),
             "A1": (0, 6), "A2": (1, 6), "A3": (2, 6), "A4": (3, 6),
             "A5": (4, 6), "A6": (5, 6), "A7": (6, 6), "A8": (7, 6), "A9": (8, 6),
             "B1": (0, 5), "B3": (2, 5), "B7": (6, 5), "B9": (8, 5),
@@ -25,7 +25,7 @@ class Map:
             "G5": (4, 0), "G6": (5, 0), "G7": (6, 0), "G8": (7, 0), "G9": (8, 0)
         }
         self.edges = [
-            ("L 1", "A1"), ("L 2", "G1"), ("L 3", "G9"),
+            ("A0", "A1"), ("L2", "G1"), ("L3", "G9"),
             ("A1", "A2"), ("A1", "B1"), ("A2", "A3"), ("A3", "A4"),
             ("A3", "B3"), ("A4", "A5"), ("A5", "A6"), ("A6", "A7"),
             ("A7", "B7"), ("A7", "A8"), ("A8", "A9"), ("A9", "B9"),
@@ -43,7 +43,7 @@ class Map:
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
 
-        self.highlight_node = "A1"
+        self.highlight_node = "A0"
         
         self.fig, self.ax = plt.subplots()
         plt.ion()
@@ -102,9 +102,12 @@ class Map:
 
             if server_input.lower() == "q":
                 print("Quit")
-                break  
+                break
 
             self.set_highlight(server_input)
+
+            if self.quit_flag.is_set():
+                break
 
         plt.ioff()
         plt.show()

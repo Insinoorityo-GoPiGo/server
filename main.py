@@ -27,8 +27,8 @@ def start_thread(client_api):
     (threading.Thread(target=run_function, args=(client_api,))).start()
 
 def main():
-    path = PathFinding().get_shortest_path(start="A1", end="C3")
-    map = Map(queue=location_queue, stop_loop_event=quit_flag)
+    path = PathFinding().get_shortest_path(start="A0", end="E5")
+    map = Map(queue=location_queue, quit_flag=quit_flag)
     
     
     client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=1025, path=path, quit_flag=quit_flag, location_queue=location_queue)

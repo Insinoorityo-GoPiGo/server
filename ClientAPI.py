@@ -7,7 +7,7 @@ import asyncio
 import re
 
 class ClientAPI():
-    def __init__(self, host, port, path, quit_flag, location_queue, default_direction="north"):
+    def __init__(self, host, port, path, quit_flag, location_queue, default_direction="east"):
         
         #Client control stuff
         self.location_queue = location_queue
