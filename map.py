@@ -43,7 +43,7 @@ class Map:
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
 
-        self.highlight_node = None
+        self.highlight_node = "A1"
         
         self.fig, self.ax = plt.subplots()
         plt.ion()
@@ -53,7 +53,7 @@ class Map:
     def get_location(self) -> str | None:
         """Hakee sijainnin jonosta, jos se ei ole tyhjä"""
         try:
-            location = self.queue.get(block=True)  # Hakee jonosta ilman odotusta
+            location = self.queue.get(block=True)
             print(f" Queue: {location}")
             return location
         except Empty:
@@ -62,13 +62,27 @@ class Map:
 
     def update_graph(self):
         self.ax.clear()
-        node_colors = ["green" if node == self.highlight_node else "red" for node in self.G.nodes]
+        
+        node_colors = [ #highlighted noden värin määrittäminen
+            "green" if node == self.highlight_node 
+            
+            else "red" 
+            
+            for node in self.G.nodes
+        ]
+
         nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color='gray', ax=self.ax)
         nx.draw_networkx_labels(self.G, self.points, font_color="black", font_size=10, ax=self.ax)
         plt.draw()
         plt.pause(0.1)
 
     def set_highlight(self, location):
+
+        if type(location) == "str":
+            pass
+        if type(location) == "dict":
+            location = location["location"]
+
         if location in self.G.nodes:
             print(f"Highlight node: {location}")
             self.highlight_node = location #Is the highlighted node

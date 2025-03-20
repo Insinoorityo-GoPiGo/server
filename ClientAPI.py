@@ -168,6 +168,7 @@ class ClientAPI():
             print("At first node. GoPiGo started")
         
         for node in self.path:
+            self.send_location_to_map()
 
             if node == self.path[-1]:
                 print("Goal reached.")
@@ -175,7 +176,7 @@ class ClientAPI():
 
             cardinal_direction = self.check_next_node() #Where the enxt node is: north (1), east (2), south (3), west (4)
 
-            self.send_location_to_map()
+            
             self.update_location()
 
             if self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
