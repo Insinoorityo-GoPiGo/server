@@ -53,7 +53,7 @@ class Map:
     def get_location(self) -> str | None:
         """Hakee sijainnin jonosta, jos se ei ole tyhjä"""
         try:
-            location = self.queue.get(block=True)
+            location = self.queue.get(block=False)
             print(f" Queue: {location}")
             return location
         except Empty:
@@ -93,6 +93,7 @@ class Map:
     def run(self):
         print("map started")
         while True:
+            #break
             server_input = self.get_location()
 
             if server_input is None:
@@ -100,8 +101,11 @@ class Map:
                 time.sleep(0.5)  # Odotetaan, jos jono on tyhjä
                 continue  
 
+            plt.waitforbuttonpress(0)
+            
             if server_input.lower() == "q":
                 print("Quit")
+                plt.close('all')
                 break
 
             self.set_highlight(server_input)
@@ -110,4 +114,9 @@ class Map:
                 break
 
         plt.ioff()
-        plt.show()
+        print("ioff")
+        plt.show(block=False)
+        print("plt show")
+        #plt.ion()
+        print("Closed graph.")
+        plt.close(fig=self.G)

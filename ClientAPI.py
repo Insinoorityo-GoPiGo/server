@@ -32,13 +32,19 @@ class ClientAPI():
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((self.HOST, self.PORT))
 
+        self.client_socket, self.client_address = None, None
+        print("__init__() done.")
+
+    async def open_connection(self):
         self.server_socket.listen(1) #Allow only 1 connection
         print("Listening for a connection.")
         self.client_socket, self.client_address = self.server_socket.accept()
         print(f"Connection established with {self.client_address}")
         
         self.listening = True
-        print("__init__() done.")
+        print("Connection opened.")
+        
+        self.logic()
 
     def confirm(self, expected, confirmation) -> bool:
         confirmation = re.sub(pattern='"', repl='', string=confirmation)
@@ -73,7 +79,7 @@ class ClientAPI():
     def is_gopigo_facing_next_node(self, cardinal_direction):
         return self.gopigo_direction == cardinal_direction
 
-    async def turn_gopigo(self, where_from, to_where):
+    def turn_gopigo(self, where_from, to_where):
 
         if where_from == "north":
             if to_where == "east":
@@ -111,17 +117,17 @@ class ClientAPI():
         
         self.send_command(command=command) #Send a command to client to turn in the desired direction
         
-        confirmation = await self.receive_message_from_client()
+        confirmation = self.receive_message_from_client()
 
         if self.confirm(expected="TURN_OK", confirmation=confirmation) : #Receive a confirmation that the client has executed the turning command
             pass
         else:
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
 
-    async def drive_forward(self):
+    def drive_forward(self):
         self.send_command(command="DRIVE_FORWARD") #Send a command for client to drice forward.
         
-        confirmation = await self.receive_message_from_client()
+        confirmation = self.receive_message_from_client()
 
         if self.confirm(expected="DRIVE_OK", confirmation=confirmation): #Receive a confirmation from client that it has started driving forward.
             pass
@@ -141,23 +147,23 @@ class ClientAPI():
         print("current Location:", self.current_node)
         self.location_queue.put(self.current_node, block=True) #Vaikka tässä?
 
-    async def logic(self):
+    def logic(self):
         print("In ClientAPI.logic(), before while")
         while self.listening:
             print("First path driving")
-            await self.logic_loop()
+            self.logic_loop()
             print("Second path driving")
-            await self.drive_back()
+            self.drive_back()
             print("Done driving.")
             self.quit_flag.set()
             self.close_connection()
 
-    async def logic_loop(self):
+    def logic_loop(self):
         if self.current_node_marker == 0:
             self.send_command(command="ARE_YOU_READY") #Send a check to client to make sure it's ready
             print("In logic_loop, after sending the command")
 
-            confirmation = await self.receive_message_from_client() #This is where the error comes from.
+            confirmation = self.receive_message_from_client() #This is where the error comes from.
 
             if self.confirm(expected="I_AM_READY", confirmation=confirmation): #Receive a ready confirmation from client
                 print("In logic_loop, response has been received")
@@ -181,10 +187,10 @@ class ClientAPI():
 
             if self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
                 print("GoPiGo is facing the next node.")
-                await self.drive_forward()
+                self.drive_forward()
             else:
-                await self.turn_gopigo(where_from=self.gopigo_direction, to_where=cardinal_direction)
-                await self.drive_forward()
+                self.turn_gopigo(where_from=self.gopigo_direction, to_where=cardinal_direction)
+                self.drive_forward()
 
     def reverse_path(self):
         self.path = list(reversed(self.path))
@@ -196,12 +202,12 @@ class ClientAPI():
         self.current_node = self.path[self.current_node_marker]
         self.next_node = self.path[self.next_node_marker]
 
-    async def drive_back(self):
+    def drive_back(self):
         self.reverse_path()
         self.reset_node_markers()
-        await self.logic_loop()
+        self.logic_loop()
 
-    async def receive_message_from_client(self):
+    def receive_message_from_client(self):
         print("In receive_message_from_client, before try")
         try:
             if self.listening:
