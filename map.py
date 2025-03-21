@@ -73,7 +73,7 @@ class Map:
 
         nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color='gray', ax=self.ax)
         nx.draw_networkx_labels(self.G, self.points, font_color="black", font_size=10, ax=self.ax)
-        #plt.draw()
+
         plt.show(block=False)
         plt.pause(0.1)
 
