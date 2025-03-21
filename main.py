@@ -19,7 +19,7 @@ def run_server(client_api):
 
 def start_thread(client_api):
     print("In start_thread")
-    (threading.Thread(target=run_server, args=(client_api,))).start()
+    (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
 
 
