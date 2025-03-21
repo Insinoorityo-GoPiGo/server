@@ -114,11 +114,3 @@ class Map:
                     break
         except KeyboardInterrupt:
             plt.close('all')
-
-        plt.ioff()
-        #print("ioff")
-        #plt.show(block=False)
-        #print("plt show")
-        #plt.ion()
-        print("Closed graph.")
-        #plt.close(fig=self.G)
