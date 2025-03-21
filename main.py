@@ -31,7 +31,7 @@ def main():
     start_thread(client_api=client_api)
 
     print("before map.run()")
-    #map.run()
+    map.run()
 
 if __name__ == "__main__":
     main()
