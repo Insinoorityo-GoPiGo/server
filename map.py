@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import time
-from queue import Queue, Empty
+from queue import Empty
 
 class Map:
     def __init__(self, queue, quit_flag):
