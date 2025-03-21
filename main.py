@@ -27,7 +27,6 @@ def main():
     path = PathFinding().get_shortest_path(start="A0", end="E5")
     map = Map(queue=location_queue, quit_flag=quit_flag)
     
-    print(os.getenv("IP_ADDRESS"))
     client_api = ClientAPI(host="127.0.0.1", port=1025, path=path, quit_flag=quit_flag, location_queue=location_queue)
     start_thread(client_api=client_api)
 
