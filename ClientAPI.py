@@ -37,9 +37,9 @@ class ClientAPI():
 
     async def open_connection(self):
         self.server_socket.listen(1) #Allow only 1 connection
-        print(f"[{self.bot_id}]Listening for a connection.")
+        print("Listening for a connection.")
         self.client_socket, self.client_address = self.server_socket.accept()
-        print(f"[{self.bot_id}]Connection established with {self.client_address}")
+        print(f"Connection established with {self.client_address}")
         
         self.listening = True
         print("Connection opened.")
@@ -119,17 +119,17 @@ class ClientAPI():
         
         confirmation = self.receive_message_from_client()
 
-        if self.confirm(expected=f"[{self.bot_id}]TURN_OK", confirmation=confirmation) : #Receive a confirmation that the client has executed the turning command
+        if self.confirm(expected="TURN_OK", confirmation=confirmation) : #Receive a confirmation that the client has executed the turning command
             pass
         else:
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
 
     def drive_forward(self):
-        self.send_command(command=f"[{self.bot_id}]DRIVE_FORWARD") #Send a command for client to drice forward.
+        self.send_command(command="DRIVE_FORWARD") #Send a command for client to drice forward.
         
         confirmation = self.receive_message_from_client()
 
-        if self.confirm(expected=f"[{self.bot_id}]DRIVE_OK", confirmation=confirmation): #Receive a confirmation from client that it has started driving forward.
+        if self.confirm(expected="DRIVE_OK", confirmation=confirmation): #Receive a confirmation from client that it has started driving forward.
             pass
         else:
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
