@@ -3,10 +3,18 @@ import matplotlib.pyplot as plt
 import time
 from queue import Empty
 
+import tkinter as tk
+
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 class Map:
-    def __init__(self, queue, quit_flag):
+    def __init__(self, queue, quit_flag, master):
         self.queue = queue
         self.quit_flag = quit_flag
+        
+        #self.window = tk.Toplevel(master=master)
+        #self.window.title("map")
+        #self.window.geometry("600x500")
 
         # Määritellään graafi
         self.G = nx.Graph()
@@ -46,6 +54,7 @@ class Map:
         self.highlight_node = "A0"
         
         self.fig, self.ax = plt.subplots()
+        
         plt.ion()
         self.update_graph()
         print("map init complete")
@@ -74,7 +83,11 @@ class Map:
         nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color='gray', ax=self.ax)
         nx.draw_networkx_labels(self.G, self.points, font_color="black", font_size=10, ax=self.ax)
 
-        plt.show(block=False)
+        #canvas = FigureCanvasTkAgg(figure=self.fig, master=self.window)
+        #canvas.draw()
+        #canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True) #Piirtää myös mapiin graafin?
+
+        plt.show(block=False) #Figure 1 avataan
         plt.pause(0.1)
 
     def set_highlight(self, location):

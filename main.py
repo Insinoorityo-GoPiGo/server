@@ -28,24 +28,19 @@ def start_thread(client_api):
 def main():
     path_1 = PathFinding().get_shortest_path(start="A0", end="E5")
     path_2 = PathFinding().get_shortest_path(start="G5", end="D1")
-    map = Map(queue=location_queue, quit_flag=quit_flag)
+    #location_map = Map(queue=location_queue, quit_flag=quit_flag)
     
-    client_api_1 = ClientAPI(host="127.0.0.1", port=1025, path=path_1, quit_flag=quit_flag, location_queue=location_queue, default_direction="East", bot_id="Bot_1")
-    client_api_2 = ClientAPI(host="127.0.0.1", port=1026, path=path_2, quit_flag=quit_flag, location_queue=location_queue, default_direction="West", bot_id="Bot_2")
-    start_thread(client_api=client_api_1)
-    start_thread(client_api=client_api_2)
+    #client_api_1 = ClientAPI(host="127.0.0.1", port=1025, path=path_1, quit_flag=quit_flag, command_queue=command_queue, location_queue=location_queue, default_direction="East", bot_id="Bot_1")
+    #client_api_2 = ClientAPI(host="127.0.0.1", port=1026, path=path_2, quit_flag=quit_flag, command_queue=command_queue, location_queue=location_queue, default_direction="West", bot_id="Bot_2")
+    #start_thread(client_api=client_api_1)
+    #start_thread(client_api=client_api_2)
 
-    control_panel=Control_Panel(command_queue=command_queue)
-
-    client_api_1 = ClientAPI(host="127.0.0.1", port=1025, path=path_1, quit_flag=quit_flag, location_queue=location_queue, command_queue=command_queue)
-    client_api_2 = ClientAPI(host="127.0.0.1", port=1025, path=path_2, quit_flag=quit_flag, location_queue=location_queue, command_queue=command_queue)
+    control_panel=Control_Panel(command_queue=command_queue, location_queue=location_queue, quit_flag=quit_flag)
 
     #lambda_func = lambda client_api: start_thread(client_api=client_api)
     #lambda_func
 
-    control_panel.run()
-    print("before map.run()")
-    map.run()
+    control_panel.open_control_panel()
 
 if __name__ == "__main__":
     main()
