@@ -5,10 +5,14 @@ import json
 import re
 
 class ClientAPI():
-    def __init__(self, host, port, path, quit_flag, location_queue, default_direction="east"):
+    def __init__(self, host, port, path, quit_flag, location_queue, command_queue default_direction="east", id="gopigo_1"):
         
         #Client control stuff
         self.location_queue = location_queue
+
+        self.command_queue = command_queue
+
+        self.ID = id
 
         self.path = path
 
@@ -145,6 +149,18 @@ class ClientAPI():
         print("current Location:", self.current_node)
         self.location_queue.put(self.current_node, block=True) #Vaikka tässä?
 
+    def handle_shutdown_command(self):
+        self.close_connection()
+
+    def check_command_queue(self):
+        command = self.command_queue.get(block=True)
+        if command["id"] == self.ID:
+            match command["command"]:
+                case "shut_down":
+                    self.handle_shutdown_command()
+        else:
+            self.command_queue.put(command)
+
     def logic(self):
         print("In ClientAPI.logic(), before while")
         while self.listening:
@@ -163,25 +179,36 @@ class ClientAPI():
 
             confirmation = self.receive_message_from_client() #This is where the error comes from.
 
+            ###
+
             if self.confirm(expected="I_AM_READY", confirmation=confirmation): #Receive a ready confirmation from client
                 print("In logic_loop, response has been received")
                 pass
             else:
                 print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
+
+            ###
             
             print("At first node. GoPiGo started")
         
         for node in self.path:
             self.send_location_to_map()
 
+            ###
+
             if node == self.path[-1]:
                 print("Goal reached.")
                 break
 
+            ###
+
             cardinal_direction = self.check_next_node() #Where the enxt node is: north (1), east (2), south (3), west (4)
 
+            ###
             
             self.update_location()
+
+            ###
 
             if self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
                 print("GoPiGo is facing the next node.")
@@ -189,6 +216,8 @@ class ClientAPI():
             else:
                 self.turn_gopigo(where_from=self.gopigo_direction, to_where=cardinal_direction)
                 self.drive_forward()
+
+            ###
 
     def reverse_path(self):
         self.path = list(reversed(self.path))
@@ -250,6 +279,7 @@ class ClientAPI():
 
     def close_connection(self):
         self.send_command(command="SHUTDOWN")
+        #Return to start location, if not in start location?
         self.stop_listening()
         self.client_socket.close()
         self.server_socket.close()

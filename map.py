@@ -81,7 +81,7 @@ class Map:
 
         if type(location) == "str":
             pass
-        if type(location) == "dict":
+        elif type(location) == "dict":
             location = location["location"]
 
         if location in self.G.nodes:
