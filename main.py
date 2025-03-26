@@ -8,6 +8,7 @@ import os
 from map import Map
 from PathFinding import PathFinding
 from ClientAPI import ClientAPI
+from control_panel import Control_Panel
 
 load_dotenv()
 
@@ -27,11 +28,12 @@ def start_thread(client_api):
 def main():
     path = PathFinding().get_shortest_path(start="A0", end="E5")
     map = Map(queue=location_queue, quit_flag=quit_flag)
-    
+    control_panel=Control_Panel()
     client_api = ClientAPI(host="127.0.0.1", port=1025, path=path, quit_flag=quit_flag, location_queue=location_queue, command_queue=command_queue)
     lambda_func = lambda client_api: start_thread(client_api=client_api)
     lambda_func
 
+    control_panel.run()
     print("before map.run()")
     map.run()
 
