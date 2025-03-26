@@ -153,13 +153,16 @@ class ClientAPI():
         self.close_connection()
 
     def check_command_queue(self):
-        command = self.command_queue.get(block=True)
-        if command["id"] == self.ID:
-            match command["command"]:
-                case "shut_down":
-                    self.handle_shutdown_command()
-        else:
-            self.command_queue.put(command)
+        if self.command_queue.qsize() > 0:
+
+            command = self.command_queue.get(block=True)
+            
+            if command["id"] == self.ID:
+                match command["command"]:
+                    case "shut_down":
+                        self.handle_shutdown_command()
+            else:
+                self.command_queue.put(command)
 
     def logic(self):
         print("In ClientAPI.logic(), before while")
