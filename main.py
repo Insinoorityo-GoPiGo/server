@@ -30,9 +30,9 @@ def main():
     path_2 = PathFinding().get_shortest_path(start="G5", end="D1")
     #location_map = Map(queue=location_queue, quit_flag=quit_flag)
     
-    #client_api_1 = ClientAPI(host=os.getenv("IP_ADDRESS"), port=1025, path=path_1, quit_flag=quit_flag, command_queue=command_queue, location_queue=location_queue, default_direction="East", bot_id="Bot_1")
-    client_api_2 = ClientAPI(host=os.getenv("IP_ADDRESS"), port=1026, path=path_2, quit_flag=quit_flag, command_queue=command_queue, location_queue=location_queue, default_direction="West", bot_id="Bot_2")
-    #start_thread(client_api=client_api_1)
+    client_api_1 = ClientAPI(host="192.168.1.110", port=1025, path=path_1, quit_flag=quit_flag, command_queue=command_queue, location_queue=location_queue, default_direction="east", bot_id="Bot_1")
+    client_api_2 = ClientAPI(host="192.168.1.110", port=1026, path=path_2, quit_flag=quit_flag, command_queue=command_queue, location_queue=location_queue, default_direction="west", bot_id="Bot_2")
+    start_thread(client_api=client_api_1)
     start_thread(client_api=client_api_2)
 
     control_panel=Control_Panel(command_queue=command_queue, location_queue=location_queue, quit_flag=quit_flag)
