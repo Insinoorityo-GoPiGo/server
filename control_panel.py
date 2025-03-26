@@ -1,5 +1,6 @@
 from tkinter import *
 
+
 from map import Map
 
 class Control_Panel:
@@ -15,6 +16,7 @@ class Control_Panel:
 
         self.app = Tk()
         self.app.title("Control Panel")
+        self.app.geometry("600x400")
 
         # Button 1
         self.b1 = Button(self.app, text="Start Map", command=lambda: self.handle_button_press())
@@ -25,6 +27,47 @@ class Control_Panel:
 
         self.button_open_map = Button(self.app, text="Open map", command=lambda: self.handle_button_press("open_map"))
         self.button_open_map.grid(padx=10, pady=10)
+        
+        self.start_node_var = StringVar()
+        self.end_node_var = StringVar()
+        
+        self.start_node_var.trace_add("write", self.force_uppercase)
+        self.end_node_var.trace_add("write", self.force_uppercase)
+        
+        self.create_node_fields()
+        
+    def create_node_fields(self):
+     
+        aloitus_label = Label(self.app, text='Aloitus', font=('calibre', 10, 'bold'))
+        aloitus_label.grid(row=0, column=10, padx=10, pady=5)
+        
+        aloitus_syöttö = Entry(self.app, textvariable=self.start_node_var, font=('calibre', 10, 'normal'), width=5)
+        aloitus_syöttö.grid(row=0, column=11, padx=10, pady=5)
+
+        lopetus_label = Label(self.app, text='Lopetus', font=('calibre', 10, 'bold'))
+        lopetus_label.grid(row=1, column=10, padx=10, pady=5)
+        
+        lopetus_syöttö = Entry(self.app, textvariable=self.end_node_var, font=('calibre', 10, 'normal'), width=5)
+        lopetus_syöttö.grid(row=1, column=11, padx=10, pady=5)
+
+        sub_btn = Button(self.app, text='Hae Reitti', command=self.submit)
+        sub_btn.grid(row=1, column=12, pady=7)
+        
+    def submit(self):
+        Aloitus = self.start_node_var.get()
+        Lopetus = self.end_node_var.get()
+
+        print(f"Aloitus Node: {Aloitus}")
+        print(f"Lopetus Node: {Lopetus}")
+        
+        self.start_node_var.set("")
+        self.end_node_var.set("")
+        
+    def force_uppercase(self, *args):
+   
+        self.start_node_var.set(self.start_node_var.get().upper())
+        self.end_node_var.set(self.end_node_var.get().upper())
+
 
     def open_control_panel(self):
         self.app.mainloop()
