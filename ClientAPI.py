@@ -5,7 +5,7 @@ import json
 import re
 
 class ClientAPI():
-    def __init__(self, host, port, path, quit_flag, location_queue, default_direction="east", bot_id=None):
+    def __init__(self, host, port, path, quit_flag, location_queue, default_direction=None, bot_id=None):
         
         #Client control stuff
         self.location_queue = location_queue
