@@ -37,8 +37,8 @@ def main():
 
     control_panel=Control_Panel(command_queue=command_queue)
 
-    client_api = ClientAPI(host="127.0.0.1", port=1025, path=path_1, quit_flag=quit_flag, location_queue=location_queue, command_queue=command_queue)
-    client_api = ClientAPI(host="127.0.0.1", port=1025, path=path_2, quit_flag=quit_flag, location_queue=location_queue, command_queue=command_queue)
+    client_api_1 = ClientAPI(host="127.0.0.1", port=1025, path=path_1, quit_flag=quit_flag, location_queue=location_queue, command_queue=command_queue)
+    client_api_2 = ClientAPI(host="127.0.0.1", port=1025, path=path_2, quit_flag=quit_flag, location_queue=location_queue, command_queue=command_queue)
 
     #lambda_func = lambda client_api: start_thread(client_api=client_api)
     #lambda_func
