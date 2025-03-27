@@ -135,15 +135,16 @@ class Control_Panel:
        
         if command == None or command == "":
             print("No command received")
-
+            pass
+        elif command == "open_map":
+            print("open_map command received.")
+            self.open_map()
+        elif command == "GPG1":
+            self.open_and_run_socket()
+        else:
             self.command_queue.put(
                 {
                     "id": self.chosen_client_id,
                     "command": command
                 }
             )
-        elif command == "open_map":
-            print("open_map command received.")
-            self.open_map()
-        elif command == "GPG1":
-            self.open_and_run_socket()
