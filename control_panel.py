@@ -1,11 +1,32 @@
 from tkinter import *
 import threading
+from tkinter.ttk import Combobox 
+
 
 from map import Map
 
+
 class Control_Panel:
-    def __init__(self, command_queue, location_queue, quit_flag):
+    def __init__(self, command_queue, location_queue, quit_flag,):
         self.command_queue = command_queue
+        self.valid_inputs = [
+            "A0" ,
+            "A1",
+            "A2", "A3", "A4",
+            "A5", "A6", "A7", "A8", "A9",
+            "B1", "B3", "B7", "B9",
+            "C1", "C2", "C3", "C4",
+            "C5", "C6", "C7", "C9",
+            "D1", "D3", "D7", "D9",
+            "E1", "E3", "E4", "E5",
+            "E6", "E7", "E8", "E9",
+            "F1", "F3", "F7", "F9",
+            "G1", "G2", "G3", "G4",
+            "G5", "G6", "G7", "G8", "G9"
+        ]
+        
+        
+         
 
         self.location_queue = location_queue
         self.quit_flag = quit_flag
@@ -13,28 +34,31 @@ class Control_Panel:
         self.chosen_client_id = None
 
         self.location_map: None|Map = None
-
+    
         self.app = Tk()
         self.app.title("Control Panel")
         self.app.geometry("600x400")
+        
 
         # Button 1
-        self.b1 = Button(self.app, text="Start Map", command=lambda: self.handle_button_press())
-        self.b1.grid(padx=10, pady=10)
-        # Button 2
-        self.b2 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press())
-        self.b2.grid(padx=10, pady=10)
+        self.b1 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press("GPG1"))
+        self.b1.grid(row=0, column=0, padx=10, pady=10)
 
+        self.b2 = Button(self.app, text="Start GPG2", command=lambda: self.handle_button_press("GPG2"))
+        self.b2.grid(row=60, column=0, padx=10, pady=10)
+        
         self.button_open_map = Button(self.app, text="Open map", command=lambda: self.handle_button_press("open_map"))
-        self.button_open_map.grid(padx=10, pady=10)
+        self.button_open_map.grid(row=0, column=1000, padx=10, pady=10)
         
-        self.start_node_var = StringVar()
-        self.end_node_var = StringVar()
+        self.start_node_var_1 = StringVar(value="A0")
+        self.end_node_var_1 = StringVar()
         
-        self.start_node_var.trace_add("write", self.force_uppercase)
-        self.end_node_var.trace_add("write", self.force_uppercase)
-        
-        self.create_node_fields()
+        self.start_node_var_2 = StringVar(value="E5")
+        self.end_node_var_2 = StringVar()
+           
+        self.create_node_fields_gpg1()
+        self.create_node_fields_gpg2()
+  
 
         self.app.bind("<Escape>", self.close_app)
 
@@ -42,38 +66,65 @@ class Control_Panel:
         
         self.app.destroy() #Close the control panel window
 
-    def create_node_fields(self):
      
-        aloitus_label = Label(self.app, text='Aloitus', font=('calibre', 10, 'bold'))
-        aloitus_label.grid(row=0, column=10, padx=10, pady=5)
+    def create_node_fields_gpg1(self):
+       
+        aloitus_label_1 = Label(self.app, text='Aloitus 1', font=('Arial', 10, 'bold'))
+        aloitus_label_1.grid(row=0, column=10, padx=10, pady=5)
         
-        aloitus_syöttö = Entry(self.app, textvariable=self.start_node_var, font=('calibre', 10, 'normal'), width=5)
-        aloitus_syöttö.grid(row=0, column=11, padx=10, pady=5)
+        aloitus_syöttö_1 = Entry(self.app, textvariable=self.start_node_var_1, font=('Arial', 12, 'bold'), width=5, state="readonly")
+        aloitus_syöttö_1.grid(row=0, column=11, padx=10, pady=5)
 
-        lopetus_label = Label(self.app, text='Lopetus', font=('calibre', 10, 'bold'))
-        lopetus_label.grid(row=1, column=10, padx=10, pady=5)
+        lopetus_label_1 = Label(self.app, text='Lopetus 1', font=('Arial', 10, 'bold'))
+        lopetus_label_1.grid(row=1, column=10, padx=10, pady=5)
         
-        lopetus_syöttö = Entry(self.app, textvariable=self.end_node_var, font=('calibre', 10, 'normal'), width=5)
-        lopetus_syöttö.grid(row=1, column=11, padx=10, pady=5)
+        lopetus_syöttö_1 = Combobox(self.app, textvariable=self.end_node_var_1, values=self.valid_inputs, width=5, state="readonly")
+        lopetus_syöttö_1.grid(row=1, column=11, padx=10, pady=5)
 
-        sub_btn = Button(self.app, text='Hae Reitti', command=self.submit)
-        sub_btn.grid(row=1, column=12, pady=7)
+        sub_btn_1 = Button(self.app, text='Hae Reitti', command=self.submit_gpg1)
+        sub_btn_1.grid(row=1, column=12, pady=7)
+  
+        self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN)
+        self.separator.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
         
-    def submit(self):
-        Aloitus = self.start_node_var.get()
-        Lopetus = self.end_node_var.get()
+        
+    def create_node_fields_gpg2(self):
+        
+        aloitus_label_2 = Label(self.app, text='Aloitus 2', font=('Arial', 10, 'bold'))
+        aloitus_label_2.grid(row=60, column=10, padx=10, pady=5)
+        
+        aloitus_syöttö_2 = Entry(self.app, textvariable=self.start_node_var_2, font=('Arial', 12, 'bold'), width=5, state="readonly")
+        aloitus_syöttö_2.grid(row=60, column=11, padx=10, pady=5)
 
-        print(f"Aloitus Node: {Aloitus}")
-        print(f"Lopetus Node: {Lopetus}")
+        lopetus_label_2 = Label(self.app, text='Lopetus 2', font=('Arial', 10, 'bold'))
+        lopetus_label_2.grid(row=61, column=10, padx=10, pady=5)
         
-        self.start_node_var.set("")
-        self.end_node_var.set("")
-        
-    def force_uppercase(self, *args):
-   
-        self.start_node_var.set(self.start_node_var.get().upper())
-        self.end_node_var.set(self.end_node_var.get().upper())
+        lopetus_syöttö_2 = Combobox(self.app, textvariable=self.end_node_var_2, values=self.valid_inputs, width=5, state="readonly")
+        lopetus_syöttö_2.grid(row=61, column=11, padx=10, pady=5)
 
+        sub_btn_2 = Button(self.app, text='Hae Reitti', command=self.submit_gpg2)
+        sub_btn_2.grid(row=61, column=12, pady=7)
+        
+    def submit_gpg1(self):
+        
+        Aloitus1 = self.start_node_var_1.get()
+        Lopetus1 = self.end_node_var_1.get()
+
+        print(f"Aloitus Node GPG1: {Aloitus1}")
+        print(f"Lopetus Node GPG1: {Lopetus1}")
+        
+        self.end_node_var_1.set("")
+        
+    def submit_gpg2(self):
+        
+        Aloitus2 = self.start_node_var_2.get()
+        Lopetus2 = self.end_node_var_2.get()
+
+        print(f"Aloitus Node GPG2: {Aloitus2}")
+        print(f"Lopetus Node GPG2: {Lopetus2}")
+        
+        self.end_node_var_2.set("")
+        
 
     def open_control_panel(self):
         self.app.mainloop()
@@ -84,7 +135,8 @@ class Control_Panel:
         (threading.Thread(target=self.location_map.run, daemon=True)).start()
 
     def handle_button_press(self, command):
-        print(command)
+        print(f"Button clicked: {command}")
+       
         if command == None or command == "":
             print("No command received")
 
