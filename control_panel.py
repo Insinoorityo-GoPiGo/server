@@ -114,6 +114,8 @@ class Control_Panel:
 
         print(f"Aloitus Node GPG2: {Aloitus2}")
         print(f"Lopetus Node GPG2: {Lopetus2}")
+
+        self.path = PathFinding().get_shortest_path(start=Aloitus2, end=Lopetus2)
         
         self.end_node_var_2.set("")
 
@@ -126,8 +128,8 @@ class Control_Panel:
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.update_map()
 
-    def open_and_run_socket(self):
-        client_api = ClientAPI(host="127.0.0.1", port=1025, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id="Bot_1")
+    def open_and_run_socket(self, port):
+        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id="Bot_1")
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
@@ -141,7 +143,9 @@ class Control_Panel:
             print("open_map command received.")
             self.open_map()
         elif command == "GPG1":
-            self.open_and_run_socket()
+            self.open_and_run_socket(port=1025)
+        elif command == "GPG2":
+            self.open_and_run_socket(port=1026)
         else:
             self.command_queue.put(
                 {
