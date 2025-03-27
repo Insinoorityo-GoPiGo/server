@@ -1,5 +1,5 @@
 from tkinter import *
-
+import threading
 
 from map import Map
 
@@ -81,7 +81,7 @@ class Control_Panel:
     def open_map(self):
         print("Open map button pressed.")
         self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag, master=self.app)
-        #self.location_map.run()
+        (threading.Thread(target=self.location_map.run, daemon=True)).start()
 
     def handle_button_press(self, command):
         print(command)
