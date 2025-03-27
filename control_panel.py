@@ -57,7 +57,14 @@ class Control_Panel:
            
         self.create_node_fields_gpg1()
         self.create_node_fields_gpg2()
-          
+  
+
+        self.app.bind("<Escape>", self.close_app)
+
+    def close_app(self, event):
+        
+        self.app.destroy() #Close the control panel window
+
      
     def create_node_fields_gpg1(self):
        
