@@ -108,8 +108,6 @@ class Map:
         print("map started")
         try:
             while plt.fignum_exists(self.fig.number):
-                if plt.isinteractive() == False:
-                    plt.ion()
 
                 #break
                 server_input = self.get_location()
@@ -130,3 +128,7 @@ class Map:
                     break
         except KeyboardInterrupt:
             plt.close('all')
+
+        plt.ioff()
+        plt.show()
+        

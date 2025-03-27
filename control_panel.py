@@ -124,6 +124,7 @@ class Control_Panel:
         print("Open map button pressed.")
         self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag, master=self.app)
         (threading.Thread(target=self.location_map.run, daemon=True)).start()
+        #self.location_map.run()
 
     def open_and_run_socket(self):
         client_api = ClientAPI(host="127.0.0.1", port=1025, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id="Bot_1")
