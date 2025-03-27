@@ -2,6 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import time
 from queue import Empty
+import threading
 
 import tkinter as tk
 
@@ -103,6 +104,17 @@ class Map:
             self.update_graph()
         else:
             print(f" Virhe: Nodea {location} ei löydy.")
+
+    def update_map(self):
+        server_input = self.get_location()
+
+        if server_input:
+            self.set_highlight(server_input)
+
+        plt.pause(0.1)
+        self.fig.canvas.flush_events()
+
+        self.fig.canvas.get_tk_widget().after(500, self.update_map)
 
     def run(self):
         print("map started")
