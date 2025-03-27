@@ -35,7 +35,13 @@ class Control_Panel:
         self.end_node_var.trace_add("write", self.force_uppercase)
         
         self.create_node_fields()
+
+        self.app.bind("<Escape>", self.close_app)
+
+    def close_app(self, event):
         
+        self.app.destroy() #Close the control panel window
+
     def create_node_fields(self):
      
         aloitus_label = Label(self.app, text='Aloitus', font=('calibre', 10, 'bold'))
