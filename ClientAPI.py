@@ -123,7 +123,7 @@ class ClientAPI():
         
         confirmation = self.receive_message_from_client()
 
-        if self.confirm(expected="]TURN_OK", confirmation=confirmation) : #Receive a confirmation that the client has executed the turning command
+        if self.confirm(expected="TURN_OK", confirmation=confirmation) : #Receive a confirmation that the client has executed the turning command
             pass
         else:
             print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
