@@ -150,7 +150,8 @@ class ClientAPI():
             self.next_node = self.path[self.next_node_marker]
 
     def send_location_to_map(self):
-        print("current Location:", self.current_node)
+        #print("current Location:", self.current_node)
+        print("Sending location to map: ", self.current_node)
         self.location_queue.put(self.current_node, block=True) #Laittaa dictionaryn
 
     def handle_shutdown_command(self):

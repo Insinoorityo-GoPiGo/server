@@ -128,8 +128,8 @@ class Control_Panel:
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.update_map()
 
-    def open_and_run_socket(self, port):
-        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id="Bot_1")
+    def open_and_run_socket(self, port, the_id):
+        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id=the_id)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
@@ -143,9 +143,9 @@ class Control_Panel:
             print("open_map command received.")
             self.open_map()
         elif command == "GPG1":
-            self.open_and_run_socket(port=1025)
+            self.open_and_run_socket(port=1025, the_id="gopigo_1")
         elif command == "GPG2":
-            self.open_and_run_socket(port=1026)
+            self.open_and_run_socket(port=1026, the_id="gopigo_1")
         else:
             self.command_queue.put(
                 {
