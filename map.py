@@ -95,19 +95,13 @@ class Map:
 
     def set_highlight(self, location):
 
-        if type(location) == "str":
-            pass
-        elif type(location) == "dict":
-            location = location["location"]
-            id = location["id"]
-
-        if location in self.G.nodes:
+        if location["node"] in self.G.nodes:
             print(f"Highlight node: {location}")
             
-            if id == "gopigo_1":
-                self.highlight_node_gpg_1 = location #Is the highlighted node
-            elif id == "gopigo_2":
-                self.highlight_node_gpg_2 = location
+            if location["id"] == "gopigo_1":
+                self.highlight_node_gpg_1 = location["node"] #Is the highlighted node
+            elif location["id"] == "gopigo_2":
+                self.highlight_node_gpg_2 = location["node"]
             
             self.update_graph()
         else:
@@ -117,7 +111,7 @@ class Map:
         server_input = self.get_location()
 
         if server_input:
-            self.set_highlight(server_input)
+            self.set_highlight(location=server_input)
 
         plt.pause(0.1)
         self.fig.canvas.flush_events()
