@@ -8,6 +8,7 @@ from PathFinding import PathFinding
 from ClientAPI import ClientAPI
 
 class Control_Panel:
+    
     def __init__(self, command_queue, location_queue, quit_flag):
         self.command_queue = command_queue
         self.valid_inputs = [
@@ -38,64 +39,87 @@ class Control_Panel:
         self.app = Tk()
         self.app.title("Control Panel")
         self.app.geometry("600x400")
+        
 
         self.b1 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press("GPG1"))
-        self.b1.grid(row=0, column=0, padx=10, pady=10)
+        self.b1.grid(row=3, column=0, padx=10, pady=10)
 
         self.b2 = Button(self.app, text="Start GPG2", command=lambda: self.handle_button_press("GPG2"))
-        self.b2.grid(row=60, column=0, padx=10, pady=10)
+        self.b2.grid(row=62, column=0, padx=10, pady=10)
         
         self.button_open_map = Button(self.app, text="Open map", command=lambda: self.handle_button_press("open_map"))
-        self.button_open_map.grid(row=0, column=1000, padx=10, pady=10)
+        self.button_open_map.grid(row=0, column=10, padx=10, pady=10)
+        map_label = Label(self.app, text='Käynnistä Kartta', font=('Arial', 10))
+        map_label.grid(row=0, column=0, padx=10, pady=5)
         
         self.start_node_var_1 = StringVar(value="A0")
         self.end_node_var_1 = StringVar()
+        self.end_node_var_1.trace_add("write", self.force_uppercase)
         
-        self.start_node_var_2 = StringVar(value="E5")
+        self.start_node_var_2 = StringVar(value="G5")
         self.end_node_var_2 = StringVar()
+        self.end_node_var_2.trace_add("write", self.force_uppercase)
            
         self.create_node_fields_gpg1()
         self.create_node_fields_gpg2()
   
         self.app.bind("<Escape>", self.close_app)
+        
+    def force_uppercase(self, *args):
+       
+        self.end_node_var_1.set(self.end_node_var_1.get().upper())
+        self.end_node_var_2.set(self.end_node_var_2.get().upper())
 
     def close_app(self, event):
         self.app.destroy() #Close the control panel window
      
     def create_node_fields_gpg1(self):
-        aloitus_label_1 = Label(self.app, text='Aloitus 1', font=('Arial', 10, 'bold'))
-        aloitus_label_1.grid(row=0, column=10, padx=10, pady=5)
         
-        aloitus_syöttö_1 = Entry(self.app, textvariable=self.start_node_var_1, font=('Arial', 12, 'bold'), width=5, state="readonly")
-        aloitus_syöttö_1.grid(row=0, column=11, padx=10, pady=5)
+        GPG1_label = Label(self.app, text="GoPiGo 1 Ohjaus", font=('Arial', 10, 'bold'))
+        GPG1_label.grid(row=2, column=0, padx=10, pady=5)
+        
+        aloitus_label_1 = Label(self.app, text='Aloitus 1', font=('Arial', 10))
+        aloitus_label_1.grid(row=3, column=10, padx=10, pady=5)
+        
+        aloitus_syöttö_1 = Entry(self.app, textvariable=self.start_node_var_1, font=('Arial', 10), width=5, state="readonly")
+        aloitus_syöttö_1.grid(row=3, column=11, padx=10, pady=5)
 
-        lopetus_label_1 = Label(self.app, text='Lopetus 1', font=('Arial', 10, 'bold'))
-        lopetus_label_1.grid(row=1, column=10, padx=10, pady=5)
+        lopetus_label_1 = Label(self.app, text='Lopetus 1', font=('Arial', 10))
+        lopetus_label_1.grid(row=4, column=10, padx=10, pady=5)
         
-        lopetus_syöttö_1 = Combobox(self.app, textvariable=self.end_node_var_1, values=self.valid_inputs, width=5, state="readonly")
-        lopetus_syöttö_1.grid(row=1, column=11, padx=10, pady=5)
+        lopetus_syöttö_1 = Combobox(self.app, textvariable=self.end_node_var_1, values=self.valid_inputs, width=5)
+        lopetus_syöttö_1.grid(row=4, column=11, padx=10, pady=5)
 
         sub_btn_1 = Button(self.app, text='Hae Reitti', command=self.submit_gpg1)
-        sub_btn_1.grid(row=1, column=12, pady=7)
+        sub_btn_1.grid(row=4, column=12, pady=7)
   
-        self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN)
-        self.separator.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
+        self.separator.grid(row=1, column=0, columnspan=14, padx=10, pady=10, sticky="ew") 
+        self.separator1 = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
+        self.separator1.grid(row=5, column=0, columnspan=14, padx=10, pady=10, sticky="ew")  
         
     def create_node_fields_gpg2(self):
-        aloitus_label_2 = Label(self.app, text='Aloitus 2', font=('Arial', 10, 'bold'))
-        aloitus_label_2.grid(row=60, column=10, padx=10, pady=5)
         
-        aloitus_syöttö_2 = Entry(self.app, textvariable=self.start_node_var_2, font=('Arial', 12, 'bold'), width=5, state="readonly")
-        aloitus_syöttö_2.grid(row=60, column=11, padx=10, pady=5)
+        GPG2_label = Label(self.app, text="GoPiGo 2 Ohjaus", font=('Arial', 10, 'bold'))
+        GPG2_label.grid(row=61, column=0, padx=10, pady=5)
+        
+        aloitus_label_2 = Label(self.app, text='Aloitus 2', font=('Arial', 10))
+        aloitus_label_2.grid(row=62, column=10, padx=10, pady=5)
+        
+        aloitus_syöttö_2 = Entry(self.app, textvariable=self.start_node_var_2, font=('Arial', 10), width=5, state="readonly")
+        aloitus_syöttö_2.grid(row=62, column=11, padx=10, pady=5)
 
-        lopetus_label_2 = Label(self.app, text='Lopetus 2', font=('Arial', 10, 'bold'))
-        lopetus_label_2.grid(row=61, column=10, padx=10, pady=5)
+        lopetus_label_2 = Label(self.app, text='Lopetus 2', font=('Arial', 10))
+        lopetus_label_2.grid(row=63, column=10, padx=10, pady=5)
         
-        lopetus_syöttö_2 = Combobox(self.app, textvariable=self.end_node_var_2, values=self.valid_inputs, width=5, state="readonly")
-        lopetus_syöttö_2.grid(row=61, column=11, padx=10, pady=5)
+        lopetus_syöttö_2 = Combobox(self.app, textvariable=self.end_node_var_2, values=self.valid_inputs, width=5)
+        lopetus_syöttö_2.grid(row=63, column=11, padx=10, pady=5)
 
         sub_btn_2 = Button(self.app, text='Hae Reitti', command=self.submit_gpg2)
-        sub_btn_2.grid(row=61, column=12, pady=7)
+        sub_btn_2.grid(row=63, column=12, pady=7)
+        
+        self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
+        self.separator.grid(row=64, column=0, columnspan=14, padx=10, pady=10, sticky="ew")
         
     def submit_gpg1(self):
         Aloitus1 = self.start_node_var_1.get()
