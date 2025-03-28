@@ -9,10 +9,12 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class Map:
-    def __init__(self, queue, quit_flag, master, condition):
+    def __init__(self, queue, quit_flag, master, location_queue_1, location_queue_2):
         self.queue = queue
         self.quit_flag = quit_flag
-        self.condition = condition
+
+        self.location_queue_1 = location_queue_1
+        self.location_queue_2 = location_queue_2
         
         #self.window = tk.Toplevel(master=master)
         #self.window.title("map")
@@ -62,21 +64,6 @@ class Map:
         self.update_graph()
         print("map init complete")
 
-    def get_location(self) -> dict | None:
-        """Hakee sijainnin jonosta, jos se ei ole tyhjä"""
-        
-        location = None
-        try:
-            with self.condition:
-                while not self.queue.qsize > 0:
-                    self.condition.wait()
-                location = self.queue.get(block=False)
-            print(f" Queue: {location}")
-            return location
-        except Empty:
-            print(" Jono on tyhjä")
-            return None
-
     def update_graph(self):
         self.ax.clear()
 
@@ -99,53 +86,45 @@ class Map:
         plt.show(block=False) #Figure 1 avataan
         plt.pause(0.1)
 
-    def set_highlight(self, location: dict):
-
-        if location["node"] in self.G.nodes:
-            print(f"Highlight node: {location}")
+    def set_highlight(self, client_locations: tuple[dict]):
+        for location in client_locations:
             
-            if location["id"] == "gopigo_1":
-                self.highlight_node_gpg_1 = location["node"] #Is the highlighted node
-            elif location["id"] == "gopigo_2":
-                self.highlight_node_gpg_2 = location["node"]
-            
-            self.update_graph()
-        else:
-            print(f" Virhe: Nodea {location} ei löydy.")
+            if location["node"] in self.G.nodes:
+                print(f"Highlight node: {location}")
+                
+                if location["id"] == "gopigo_1":
+                    self.highlight_node_gpg_1 = location["node"] #Is the highlighted node
+                elif location["id"] == "gopigo_2":
+                    self.highlight_node_gpg_2 = location["node"]
+                
+        self.update_graph()
 
-    def update_map(self):
-        server_input = self.get_location()
+    def get_location(self, queue) -> dict|None:
+        location = object()
 
-        if server_input == None:
-            pass
+        try:
+            location = queue.get(block=False)
+        except Empty:
+            print(" Jono on tyhjä")
+            location = None
 
-        if server_input:
-            self.set_highlight(location=server_input)
-
-        plt.pause(0.1)
-        self.fig.canvas.flush_events()
-
-        self.fig.canvas.get_tk_widget().after(500, self.update_map)
+        return location
 
     def run(self):
         print("map started")
         try:
             while plt.fignum_exists(self.fig.number):
+                client_locations = (
+                    location 
+                    for location 
+                    in (
+                        self.get_location(queue=self.location_queue_1), 
+                        self.get_location(queue=self.location_queue_2)
+                    ) 
+                    if location != None
+                )
 
-                #break
-                server_input = self.get_location()
-
-                if server_input is None:
-                    print("No input from server")
-                    time.sleep(0.5)  # Odotetaan, jos jono on tyhjä
-                    continue  
-                
-                if server_input.lower() == "q":
-                    print("Quit")
-                    plt.close('all')
-                    break
-
-                self.set_highlight(server_input)
+                self.set_highlight(client_locations=client_locations)
 
                 if self.quit_flag.is_set():
                     break
@@ -155,3 +134,21 @@ class Map:
         plt.ioff()
         plt.show()
         
+
+
+
+
+
+
+
+#Unused as of now
+    def update_map(self):
+        server_input = self.get_location(queue=self.location_queue_1)
+
+        if server_input:
+            self.set_highlight(location=server_input)
+
+        plt.pause(0.1)
+        self.fig.canvas.flush_events()
+
+        self.fig.canvas.get_tk_widget().after(500, self.update_map)

@@ -5,11 +5,10 @@ import json
 import re
 
 class ClientAPI():
-    def __init__(self, host, port, path, quit_flag, location_queue, command_queue, condition, default_direction="east", bot_id="gopigo_1"):     
+    def __init__(self, host, port, path, quit_flag, location_queue, command_queue, default_direction="east", bot_id="gopigo_1"):     
         #Client control stuff
         self.location_queue = location_queue
         self.command_queue = command_queue
-        self.condition = condition
 
         self.ID = bot_id
 
@@ -152,9 +151,7 @@ class ClientAPI():
     def send_location_to_map(self):
         #print("current Location:", self.current_node)
         print("Sending location to map: ", self.current_node)
-        with self.condition:
-            self.location_queue.put(self.current_node, block=True) #Laittaa dictionaryn
-            self.condition.notify()
+        self.location_queue.put(self.current_node, block=True) #Laittaa dictionaryn
 
     def handle_shutdown_command(self):
         self.close_connection()

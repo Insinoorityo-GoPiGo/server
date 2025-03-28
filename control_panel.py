@@ -2,15 +2,18 @@ from tkinter import *
 import threading
 from tkinter.ttk import Combobox
 import asyncio
+import queue
 
 from map import Map
 from PathFinding import PathFinding
 from ClientAPI import ClientAPI
 
 class Control_Panel:
-    def __init__(self, command_queue, location_queue, quit_flag, condition):
+    def __init__(self, command_queue, location_queue, quit_flag):
         self.command_queue = command_queue
-        self.condition = condition
+
+        self.location_queue_1 = queue.Queue()
+        self.location_queue_2 = queue.Queue()
         
         self.valid_inputs = [
             "A0" ,
@@ -149,12 +152,14 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag, master=self.app, condition=self.condition)
+        self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag, master=self.app)
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.update_map()
 
     def open_and_run_socket(self, port, the_id):
-        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id=the_id, condition=self.condition)
+        location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
+
+        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
