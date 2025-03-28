@@ -195,28 +195,16 @@ class ClientAPI():
             else:
                 print("-----\nWrong confirmation received from client.\nIn turn_gopigo\n-----")
 
-            ###
-            
             print("At first node. GoPiGo started")
         
         for node in self.path:
-            self.send_location_to_map()
-
-            ###
+            self.send_location_to_map() #laitetaan dictionary, jossa on bot_id ja current_node mapiin
 
             if node == self.path[-1]:
                 print("Goal reached.")
                 break
 
-            ###
-
-            cardinal_direction = self.check_next_node() #Where the enxt node is: north (1), east (2), south (3), west (4)
-
-            ###
-            
-            self.update_location()
-
-            ###
+            cardinal_direction = self.check_next_node() #Where the next node is: north (1), east (2), south (3), west (4)
 
             if self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
                 print("GoPiGo is facing the next node.")
@@ -224,8 +212,8 @@ class ClientAPI():
             else:
                 self.turn_gopigo(where_from=self.gopigo_direction, to_where=cardinal_direction)
                 self.drive_forward()
-
-            ###
+            
+            self.update_location() #Markereita yks pykälä eteen päin
 
     def reverse_path(self):
         self.path = list(reversed(self.path))

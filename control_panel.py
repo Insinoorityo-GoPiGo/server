@@ -169,7 +169,7 @@ class Control_Panel:
         elif command == "GPG1":
             self.open_and_run_socket(port=1025, the_id="gopigo_1")
         elif command == "GPG2":
-            self.open_and_run_socket(port=1026, the_id="gopigo_1")
+            self.open_and_run_socket(port=1026, the_id="gopigo_2")
         else:
             self.command_queue.put(
                 {

@@ -93,7 +93,7 @@ class Map:
         plt.show(block=False) #Figure 1 avataan
         plt.pause(0.1)
 
-    def set_highlight(self, location):
+    def set_highlight(self, location: dict):
 
         if location["node"] in self.G.nodes:
             print(f"Highlight node: {location}")
@@ -109,6 +109,9 @@ class Map:
 
     def update_map(self):
         server_input = self.get_location()
+
+        if server_input == None:
+            pass
 
         if server_input:
             self.set_highlight(location=server_input)
