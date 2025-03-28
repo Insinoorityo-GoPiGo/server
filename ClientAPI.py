@@ -1,5 +1,4 @@
 import socket
-from time import sleep
 from string import ascii_letters
 import json
 import re

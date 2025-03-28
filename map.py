@@ -1,24 +1,15 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import time
 from queue import Empty
-import threading
-
 import tkinter as tk
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
 class Map:
-    def __init__(self, queue, quit_flag, master, location_queue_1, location_queue_2):
+    def __init__(self, queue, quit_flag, location_queue_1, location_queue_2):
         self.queue = queue
         self.quit_flag = quit_flag
 
         self.location_queue_1 = location_queue_1
         self.location_queue_2 = location_queue_2
-        
-        #self.window = tk.Toplevel(master=master)
-        #self.window.title("map")
-        #self.window.geometry("600x500")
 
         # Määritellään graafi
         self.G = nx.Graph()
@@ -79,10 +70,6 @@ class Map:
         nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color='gray', ax=self.ax)
         nx.draw_networkx_labels(self.G, self.points, font_color="black", font_size=10, ax=self.ax)
 
-        #canvas = FigureCanvasTkAgg(figure=self.fig, master=self.window)
-        #canvas.draw()
-        #canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True) #Piirtää myös mapiin graafin?
-
         plt.show(block=False) #Figure 1 avataan
         plt.pause(0.1)
 
@@ -110,7 +97,7 @@ class Map:
 
         return location
 
-    def run(self):
+    def run(self): #IDEA: async
         print("map started")
         try:
             while plt.fignum_exists(self.fig.number):

@@ -1,16 +1,8 @@
 import threading
-from time import sleep
 import asyncio
 import queue
-from dotenv import load_dotenv
-import os
 
-from map import Map
-from PathFinding import PathFinding
-from ClientAPI import ClientAPI
 from control_panel import Control_Panel
-
-load_dotenv()
 
 quit_flag = threading.Event()
 command_queue = queue.Queue()
