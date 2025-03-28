@@ -8,9 +8,10 @@ from PathFinding import PathFinding
 from ClientAPI import ClientAPI
 
 class Control_Panel:
-    
-    def __init__(self, command_queue, location_queue, quit_flag):
+    def __init__(self, command_queue, location_queue, quit_flag, condition):
         self.command_queue = command_queue
+        self.condition = condition
+        
         self.valid_inputs = [
             "A0" ,
             "A1",
@@ -148,12 +149,12 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag, master=self.app)
+        self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag, master=self.app, condition=self.condition)
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.update_map()
 
     def open_and_run_socket(self, port, the_id):
-        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id=the_id)
+        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id=the_id, condition=self.condition)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 

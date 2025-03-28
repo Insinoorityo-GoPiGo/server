@@ -16,6 +16,8 @@ quit_flag = threading.Event()
 location_queue = queue.Queue()
 command_queue = queue.Queue()
 
+condition = threading.Condition()
+
 def run_server(client_api):
     asyncio.run(client_api.open_connection())
 
@@ -36,7 +38,7 @@ def main():
     #start_thread(client_api=client_api_1)
     #start_thread(client_api=client_api_2)
 
-    control_panel=Control_Panel(command_queue=command_queue, location_queue=location_queue, quit_flag=quit_flag)
+    control_panel=Control_Panel(command_queue=command_queue, location_queue=location_queue, quit_flag=quit_flag, condition=condition)
 
     control_panel.open_control_panel()
 

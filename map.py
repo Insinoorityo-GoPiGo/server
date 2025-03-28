@@ -9,9 +9,10 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class Map:
-    def __init__(self, queue, quit_flag, master):
+    def __init__(self, queue, quit_flag, master, condition):
         self.queue = queue
         self.quit_flag = quit_flag
+        self.condition = condition
         
         #self.window = tk.Toplevel(master=master)
         #self.window.title("map")
@@ -63,8 +64,13 @@ class Map:
 
     def get_location(self) -> dict | None:
         """Hakee sijainnin jonosta, jos se ei ole tyhjä"""
+        
+        location = None
         try:
-            location = self.queue.get(block=False)
+            with self.condition:
+                while not self.queue.qsize > 0:
+                    self.condition.wait()
+                location = self.queue.get(block=False)
             print(f" Queue: {location}")
             return location
         except Empty:
