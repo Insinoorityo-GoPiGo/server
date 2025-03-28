@@ -15,6 +15,7 @@ load_dotenv()
 class Control_Panel:
     def __init__(self, command_queue, quit_flag):
         self.command_queue = command_queue
+        self.quit_flag = quit_flag
 
         self.location_queue_1 = queue.Queue()
         self.location_queue_2 = queue.Queue()
@@ -36,18 +37,13 @@ class Control_Panel:
         ]
 
         self.path: None|list = None
-        
-
-        self.quit_flag = quit_flag
+        self.location_map: None|Map = None
 
         self.chosen_client_id = None
-
-        self.location_map: None|Map = None
     
         self.app = Tk()
         self.app.title("Control Panel")
         self.app.geometry("600x400")
-        
 
         self.b1 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press("GPG1"))
         self.b1.grid(row=3, column=0, padx=10, pady=10)
@@ -74,7 +70,6 @@ class Control_Panel:
         self.app.bind("<Escape>", self.close_app)
         
     def force_uppercase(self, *args):
-       
         self.end_node_var_1.set(self.end_node_var_1.get().upper())
         self.end_node_var_2.set(self.end_node_var_2.get().upper())
 
@@ -82,7 +77,6 @@ class Control_Panel:
         self.app.destroy() #Close the control panel window
      
     def create_node_fields_gpg1(self):
-        
         GPG1_label = Label(self.app, text="GoPiGo 1 Ohjaus", font=('Arial', 10, 'bold'))
         GPG1_label.grid(row=2, column=0, padx=10, pady=5)
         
@@ -107,7 +101,6 @@ class Control_Panel:
         self.separator1.grid(row=5, column=0, columnspan=14, padx=10, pady=10, sticky="ew")  
         
     def create_node_fields_gpg2(self):
-        
         GPG2_label = Label(self.app, text="GoPiGo 2 Ohjaus", font=('Arial', 10, 'bold'))
         GPG2_label.grid(row=61, column=0, padx=10, pady=5)
         
@@ -162,7 +155,7 @@ class Control_Panel:
 
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
-
+        
         client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
