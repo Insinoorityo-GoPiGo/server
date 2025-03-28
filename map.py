@@ -4,8 +4,8 @@ from queue import Empty
 import tkinter as tk
 
 class Map:
-    def __init__(self, queue, quit_flag, location_queue_1, location_queue_2):
-        self.queue = queue
+    def __init__(self, quit_flag, location_queue_1, location_queue_2):
+      
         self.quit_flag = quit_flag
 
         self.location_queue_1 = location_queue_1

@@ -13,7 +13,7 @@ from ClientAPI import ClientAPI
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self, command_queue, location_queue, quit_flag):
+    def __init__(self, command_queue, quit_flag):
         self.command_queue = command_queue
 
         self.location_queue_1 = queue.Queue()
@@ -37,7 +37,7 @@ class Control_Panel:
 
         self.path: None|list = None
         
-        self.location_queue = location_queue
+
         self.quit_flag = quit_flag
 
         self.chosen_client_id = None
@@ -64,7 +64,7 @@ class Control_Panel:
         self.end_node_var_1 = StringVar()
         self.end_node_var_1.trace_add("write", self.force_uppercase)
         
-        self.start_node_var_2 = StringVar(value="G5")
+        self.start_node_var_2 = StringVar(value="G3")
         self.end_node_var_2 = StringVar()
         self.end_node_var_2.trace_add("write", self.force_uppercase)
            
@@ -156,9 +156,9 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag)
+        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag)
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
-        self.location_map.update_map()
+        self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
