@@ -18,7 +18,10 @@ class ClientAPI():
         self.current_node_marker = 0
         self.next_node_marker = self.current_node_marker + 1
 
-        self.current_node = self.path[self.current_node_marker]
+        self.current_node = {
+            "id": self.ID,
+            "node": self.path[self.current_node_marker]
+        }
         self.next_node = self.path[self.next_node_marker]
 
         self.cardinal_directions = ["north", "east", "south", "west"]
@@ -59,8 +62,8 @@ class ClientAPI():
 
         cardinal_direction = ""
 
-        current_letter = self.current_node[0]
-        current_number = self.current_node[1]
+        current_letter = self.current_node["node"][0]
+        current_number = self.current_node["node"][1]
 
         next_letter = self.next_node[0]
         next_number = self.next_node[1]
@@ -141,14 +144,14 @@ class ClientAPI():
         self.current_node_marker = self.current_node_marker + 1
         self.next_node_marker = self.current_node_marker + 1
 
-        self.current_node = self.path[self.current_node_marker]
+        self.current_node["node"] = self.path[self.current_node_marker]
 
         if self.next_node_marker <= len(self.path) - 1:
             self.next_node = self.path[self.next_node_marker]
 
     def send_location_to_map(self):
         print("current Location:", self.current_node)
-        self.location_queue.put(self.current_node, block=True) #Vaikka tässä?
+        self.location_queue.put(self.current_node, block=True) #Laittaa dictionaryn
 
     def handle_shutdown_command(self):
         self.close_connection()
@@ -230,7 +233,7 @@ class ClientAPI():
         self.current_node_marker = 0
         self.next_node_marker = self.current_node_marker + 1
 
-        self.current_node = self.path[self.current_node_marker]
+        self.current_node["node"] = self.path[self.current_node_marker]
         self.next_node = self.path[self.next_node_marker]
 
     def drive_back(self):

@@ -52,7 +52,8 @@ class Map:
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
 
-        self.highlight_node = "A0"
+        self.highlight_node_gpg_1 = "A0"
+        self.highlight_node_gpg_2 = "G5"
         
         self.fig, self.ax = plt.subplots()
         
@@ -60,7 +61,7 @@ class Map:
         self.update_graph()
         print("map init complete")
 
-    def get_location(self) -> str | None:
+    def get_location(self) -> dict | None:
         """Hakee sijainnin jonosta, jos se ei ole tyhjä"""
         try:
             location = self.queue.get(block=False)
@@ -72,11 +73,12 @@ class Map:
 
     def update_graph(self):
         self.ax.clear()
-        
+
         node_colors = [ #highlighted noden värin määrittäminen
-            "green" if node == self.highlight_node 
+            "green" if node == self.highlight_node_gpg_1 else
+            "yellow" if node == self.highlight_node_gpg_2
             
-            else "red" 
+            else "red"
             
             for node in self.G.nodes
         ]
@@ -97,10 +99,16 @@ class Map:
             pass
         elif type(location) == "dict":
             location = location["location"]
+            id = location["id"]
 
         if location in self.G.nodes:
             print(f"Highlight node: {location}")
-            self.highlight_node = location #Is the highlighted node
+            
+            if id == "gopigo_1":
+                self.highlight_node_gpg_1 = location #Is the highlighted node
+            elif id == "gopigo_2":
+                self.highlight_node_gpg_2 = location
+            
             self.update_graph()
         else:
             print(f" Virhe: Nodea {location} ei löydy.")
