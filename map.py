@@ -117,6 +117,10 @@ class Map:
                     break
         except KeyboardInterrupt:
             plt.close('all')
+        except Exception as e:
+            print("An exception has occured in map.py run() function: ",e)
+        finally:
+            print("map.py has closed")
 
         plt.ioff()
         plt.show()
