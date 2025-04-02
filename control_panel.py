@@ -21,9 +21,7 @@ class Control_Panel:
         self.location_queue_2 = queue.Queue()
         
         self.valid_inputs = [
-            "A0" ,
-            "A1",
-            "A2", "A3", "A4",
+            "A0", "A1", "A2", "A3", "A4",
             "A5", "A6", "A7", "A8", "A9",
             "B1", "B3", "B7", "B9",
             "C1", "C2", "C3", "C4",
@@ -33,7 +31,7 @@ class Control_Panel:
             "E6", "E7", "E8", "E9",
             "F1", "F3", "F7", "F9",
             "G1", "G2", "G3", "G4",
-            "G5", "G6", "G7", "G8", "G9"
+            "G5", "G6", "G7", "G8", "G9", "G10"
         ]
 
         self.path: None|list = None
@@ -163,16 +161,28 @@ class Control_Panel:
     def handle_button_press(self, command):
         print(f"Button clicked: {command}")
        
-        if command == None or command == "":
+        if command is None or command == "":
             print("No command received")
             pass
         elif command == "open_map":
             print("open_map command received.")
             self.open_map()
-        elif command == "GPG1":
-            self.open_and_run_socket(port=1025, the_id="gopigo_1")
+        elif command == "GPG1": 
+            if self.path is None:
+                print(f"Some Nodes are Missing from: {command}")
+                return  
+            else: 
+                self.open_and_run_socket(port=1025, the_id="gopigo_1") 
+                self.b1.config(bg="green")
+                    
+       
         elif command == "GPG2":
-            self.open_and_run_socket(port=1026, the_id="gopigo_2")
+            if self.path is None:
+                print(f"Some Nodes are Missing from: {command}")
+                return
+            else: 
+                self.open_and_run_socket(port=1026, the_id="gopigo_2")
+                self.b2.config(bg="green")
         else:
             self.command_queue.put(
                 {

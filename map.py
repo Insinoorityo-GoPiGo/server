@@ -14,7 +14,7 @@ class Map:
         # Määritellään graafi
         self.G = nx.Graph()
         self.points = {
-            "A0": (-1, 6), "L2": (0, -1), "L3": (9, 0),
+            "A0": (-1, 6), "G10": (9, 0),
             "A1": (0, 6), "A2": (1, 6), "A3": (2, 6), "A4": (3, 6),
             "A5": (4, 6), "A6": (5, 6), "A7": (6, 6), "A8": (7, 6), "A9": (8, 6),
             "B1": (0, 5), "B3": (2, 5), "B7": (6, 5), "B9": (8, 5),
@@ -28,7 +28,7 @@ class Map:
             "G5": (4, 0), "G6": (5, 0), "G7": (6, 0), "G8": (7, 0), "G9": (8, 0)
         }
         self.edges = [
-            ("A0", "A1"), ("L2", "G1"), ("L3", "G9"),
+            ("A0", "A1"), ("G10", "G9"),
             ("A1", "A2"), ("A1", "B1"), ("A2", "A3"), ("A3", "A4"),
             ("A3", "B3"), ("A4", "A5"), ("A5", "A6"), ("A6", "A7"),
             ("A7", "B7"), ("A7", "A8"), ("A8", "A9"), ("A9", "B9"),
@@ -59,9 +59,8 @@ class Map:
         self.ax.clear()
 
         node_colors = [ #highlighted noden värin määrittäminen
-            "green" if node == self.highlight_node_gpg_1 else
-            "yellow" if node == self.highlight_node_gpg_2
-            
+            "green" if node == self.highlight_node_gpg_1 
+            else "yellow" if node == self.highlight_node_gpg_2 
             else "red"
             
             for node in self.G.nodes
