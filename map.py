@@ -1,21 +1,15 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import time
 from queue import Empty
-import threading
-
 import tkinter as tk
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
 class Map:
-    def __init__(self, queue, quit_flag, master):
-        self.queue = queue
+    def __init__(self, quit_flag, location_queue_1, location_queue_2):
+      
         self.quit_flag = quit_flag
-        
-        #self.window = tk.Toplevel(master=master)
-        #self.window.title("map")
-        #self.window.geometry("600x500")
+
+        self.location_queue_1 = location_queue_1
+        self.location_queue_2 = location_queue_2
 
         # Määritellään graafi
         self.G = nx.Graph()
@@ -61,16 +55,6 @@ class Map:
         self.update_graph()
         print("map init complete")
 
-    def get_location(self) -> dict | None:
-        """Hakee sijainnin jonosta, jos se ei ole tyhjä"""
-        try:
-            location = self.queue.get(block=False)
-            print(f" Queue: {location}")
-            return location
-        except Empty:
-            print(" Jono on tyhjä")
-            return None
-
     def update_graph(self):
         self.ax.clear()
 
@@ -85,57 +69,48 @@ class Map:
         nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color='gray', ax=self.ax)
         nx.draw_networkx_labels(self.G, self.points, font_color="black", font_size=10, ax=self.ax)
 
-        #canvas = FigureCanvasTkAgg(figure=self.fig, master=self.window)
-        #canvas.draw()
-        #canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True) #Piirtää myös mapiin graafin?
-
         plt.show(block=False) #Figure 1 avataan
         plt.pause(0.1)
 
-    def set_highlight(self, location):
-
-        if location["node"] in self.G.nodes:
-            print(f"Highlight node: {location}")
+    def set_highlight(self, client_locations: tuple[dict]):
+        for location in client_locations:
             
-            if location["id"] == "gopigo_1":
-                self.highlight_node_gpg_1 = location["node"] #Is the highlighted node
-            elif location["id"] == "gopigo_2":
-                self.highlight_node_gpg_2 = location["node"]
-            
-            self.update_graph()
-        else:
-            print(f" Virhe: Nodea {location} ei löydy.")
+            if location["node"] in self.G.nodes:
+                print(f"Highlight node: {location}")
+                
+                if location["id"] == "gopigo_1":
+                    self.highlight_node_gpg_1 = location["node"] #Is the highlighted node
+                elif location["id"] == "gopigo_2":
+                    self.highlight_node_gpg_2 = location["node"]
+                
+        self.update_graph()
 
-    def update_map(self):
-        server_input = self.get_location()
+    def get_location(self, queue) -> dict|None:
+        location = object()
 
-        if server_input:
-            self.set_highlight(location=server_input)
+        try:
+            location = queue.get(block=False)
+        except Empty:
+            print(" Jono on tyhjä")
+            location = None
 
-        plt.pause(0.1)
-        self.fig.canvas.flush_events()
+        return location
 
-        self.fig.canvas.get_tk_widget().after(500, self.update_map)
-
-    def run(self):
+    def run(self): #IDEA: async
         print("map started")
         try:
             while plt.fignum_exists(self.fig.number):
+                client_locations = (
+                    location 
+                    for location 
+                    in (
+                        self.get_location(queue=self.location_queue_1), 
+                        self.get_location(queue=self.location_queue_2)
+                    ) 
+                    if location != None
+                )
 
-                #break
-                server_input = self.get_location()
-
-                if server_input is None:
-                    print("No input from server")
-                    time.sleep(0.5)  # Odotetaan, jos jono on tyhjä
-                    continue  
-                
-                if server_input.lower() == "q":
-                    print("Quit")
-                    plt.close('all')
-                    break
-
-                self.set_highlight(server_input)
+                self.set_highlight(client_locations=client_locations)
 
                 if self.quit_flag.is_set():
                     break
@@ -145,3 +120,21 @@ class Map:
         plt.ioff()
         plt.show()
         
+
+
+
+
+
+
+
+#Unused as of now
+    def update_map(self):
+        server_input = self.get_location(queue=self.location_queue_1)
+
+        if server_input:
+            self.set_highlight(location=server_input)
+
+        plt.pause(0.1)
+        self.fig.canvas.flush_events()
+
+        self.fig.canvas.get_tk_widget().after(500, self.update_map)

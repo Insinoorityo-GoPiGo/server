@@ -2,15 +2,24 @@ from tkinter import *
 import threading
 from tkinter.ttk import Combobox
 import asyncio
+import queue
+import os
+from dotenv import load_dotenv
 
 from map import Map
 from PathFinding import PathFinding
 from ClientAPI import ClientAPI
 
+load_dotenv()
+
 class Control_Panel:
-    
-    def __init__(self, command_queue, location_queue, quit_flag):
+    def __init__(self, command_queue, quit_flag):
         self.command_queue = command_queue
+        self.quit_flag = quit_flag
+
+        self.location_queue_1 = queue.Queue()
+        self.location_queue_2 = queue.Queue()
+        
         self.valid_inputs = [
             "A0", "A1", "A2", "A3", "A4",
             "A5", "A6", "A7", "A8", "A9",
@@ -26,18 +35,13 @@ class Control_Panel:
         ]
 
         self.path: None|list = None
-        
-        self.location_queue = location_queue
-        self.quit_flag = quit_flag
+        self.location_map: None|Map = None
 
         self.chosen_client_id = None
-
-        self.location_map: None|Map = None
     
         self.app = Tk()
         self.app.title("Control Panel")
         self.app.geometry("600x400")
-        
 
         self.b1 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press("GPG1"))
         self.b1.grid(row=3, column=0, padx=10, pady=10)
@@ -54,7 +58,7 @@ class Control_Panel:
         self.end_node_var_1 = StringVar()
         self.end_node_var_1.trace_add("write", self.force_uppercase)
         
-        self.start_node_var_2 = StringVar(value="G5")
+        self.start_node_var_2 = StringVar(value="G3")
         self.end_node_var_2 = StringVar()
         self.end_node_var_2.trace_add("write", self.force_uppercase)
            
@@ -64,7 +68,6 @@ class Control_Panel:
         self.app.bind("<Escape>", self.close_app)
         
     def force_uppercase(self, *args):
-       
         self.end_node_var_1.set(self.end_node_var_1.get().upper())
         self.end_node_var_2.set(self.end_node_var_2.get().upper())
 
@@ -72,7 +75,6 @@ class Control_Panel:
         self.app.destroy() #Close the control panel window
      
     def create_node_fields_gpg1(self):
-        
         GPG1_label = Label(self.app, text="GoPiGo 1 Ohjaus", font=('Arial', 10, 'bold'))
         GPG1_label.grid(row=2, column=0, padx=10, pady=5)
         
@@ -97,7 +99,6 @@ class Control_Panel:
         self.separator1.grid(row=5, column=0, columnspan=14, padx=10, pady=10, sticky="ew")  
         
     def create_node_fields_gpg2(self):
-        
         GPG2_label = Label(self.app, text="GoPiGo 2 Ohjaus", font=('Arial', 10, 'bold'))
         GPG2_label.grid(row=61, column=0, padx=10, pady=5)
         
@@ -146,12 +147,14 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(queue=self.location_queue, quit_flag=self.quit_flag, master=self.app)
+        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag)
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
-        self.location_map.update_map()
+        self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):
-        client_api = ClientAPI(host="127.0.0.1", port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=self.location_queue, default_direction="east", bot_id=the_id)
+        location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
+        
+        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
