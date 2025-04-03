@@ -155,7 +155,7 @@ class Control_Panel:
     def submit_remove_edge(self):
         Node1 = self.remove_edge_1.get()
         Node2 = self.remove_edge_2.get()
-        print(f"Edge from: {Node1} to {Node2} is removed") 
+        self.remove_edge(target_edge=(Node1,Node2))
        
     def submit_gpg1(self):
         Aloitus1 = self.start_node_var_1.get()
