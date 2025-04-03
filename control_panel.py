@@ -13,7 +13,10 @@ from ClientAPI import ClientAPI
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self, command_queue, quit_flag):
+    def __init__(self, command_queue, quit_flag, coordinates, edges):
+        self.coordinates = coordinates
+        self.edges = edges
+
         self.command_queue = command_queue
         self.quit_flag = quit_flag
 
@@ -127,7 +130,7 @@ class Control_Panel:
         print(f"Aloitus Node GPG1: {Aloitus1}")
         print(f"Lopetus Node GPG1: {Lopetus1}")
         
-        self.path = PathFinding().get_shortest_path(start=Aloitus1, end=Lopetus1)
+        self.path = PathFinding(coordinates=self.coordinates, edges=self.edges).get_shortest_path(start=Aloitus1, end=Lopetus1)
 
         self.end_node_var_1.set("")
         
@@ -138,7 +141,7 @@ class Control_Panel:
         print(f"Aloitus Node GPG2: {Aloitus2}")
         print(f"Lopetus Node GPG2: {Lopetus2}")
 
-        self.path = PathFinding().get_shortest_path(start=Aloitus2, end=Lopetus2)
+        self.path = PathFinding(coordinates=self.coordinates, edges=self.edges).get_shortest_path(start=Aloitus2, end=Lopetus2)
         
         self.end_node_var_2.set("")
 
@@ -147,7 +150,7 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag)
+        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges)
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.run()
 
