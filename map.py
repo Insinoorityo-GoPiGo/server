@@ -2,9 +2,12 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from queue import Empty
 import tkinter as tk
+import time
 
 class Map:
-    def __init__(self, quit_flag, location_queue_1, location_queue_2, coordinates, edges):
+    def __init__(self, quit_flag, location_queue_1, location_queue_2, coordinates, edges, map_logic_execution_pause, map_has_been_paused):
+        self.map_logic_execution_pause = map_logic_execution_pause
+        self.map_has_been_paused = map_has_been_paused
       
         self.quit_flag = quit_flag
 
@@ -85,6 +88,16 @@ class Map:
                 )
 
                 self.set_highlight(client_locations=client_locations)
+
+                notified = False
+                while self.map_logic_execution_pause.is_set():
+                    if notified is not True:
+                        self.map_has_been_paused.notify()
+                        print("Map has been paused notification")
+                        notified = True
+                    print("Map is paused")
+                    plt.pause(0.5)
+
 
                 if self.quit_flag.is_set():
                     break

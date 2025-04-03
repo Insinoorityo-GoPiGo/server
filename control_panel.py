@@ -12,6 +12,9 @@ from ClientAPI import ClientAPI
 
 load_dotenv()
 
+map_logic_execution_pause = threading.Event()
+map_has_been_paused = threading.Condition()
+
 class Control_Panel:
     def __init__(self, command_queue, quit_flag, coordinates, edges):
         self.coordinates = coordinates
@@ -152,7 +155,7 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges)
+        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, )
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.run()
 
@@ -165,18 +168,23 @@ class Control_Panel:
 
     def remove_edge(self, target_edge: tuple):
         #Pysäytetään mapin toiminta
+        map_logic_execution_pause.set()
+        map_has_been_paused.wait()
+
         #Pysäytetään socketin toiminta
 
         #Poistetaan edge
-        node_1, node_2 = target_edge
-        for edge in self.location_map.edges:
-            if edge == (node_1, node_2) or edge == (node_2, node_1):
-                index = self.location_map.edges.index(edge)
-                removed_edge = self.location_map.edges.pop(index)
-                self.removed_edges = removed_edge
-                break
+        #node_1, node_2 = target_edge
+        #for edge in self.location_map.edges:
+        #    if edge == (node_1, node_2) or edge == (node_2, node_1):
+        #        index = self.location_map.edges.index(edge)
+        #        removed_edge = self.location_map.edges.pop(index)
+        #        self.removed_edges = removed_edge
+        #        break
 
         #Jatketaan mapin toimintaa
+        map_logic_execution_pause.clear()
+
         #Jatketaan socketin toimintaa
 
     def handle_button_press(self, command):
