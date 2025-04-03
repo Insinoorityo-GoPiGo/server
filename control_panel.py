@@ -57,7 +57,7 @@ class Control_Panel:
         
         
         self.button_open_map = Button(self.app, text="Open map", command=lambda: self.handle_button_press("open_map"))
-        self.button_open_map.grid(row=0, column=10, padx=10, pady=10)
+        self.button_open_map.grid(row=0, column=1, padx=10, pady=10)
         map_label = Label(self.app, text='Käynnistä Kartta', font=('Arial', 10))
         map_label.grid(row=0, column=0, padx=10, pady=5)
         
@@ -94,19 +94,19 @@ class Control_Panel:
         GPG1_label.grid(row=2, column=0, padx=10, pady=5)
         
         aloitus_label_1 = Label(self.app, text='Aloitus 1', font=('Arial', 10))
-        aloitus_label_1.grid(row=3, column=10, padx=10, pady=5)
+        aloitus_label_1.grid(row=3, column=1, padx=10, pady=5)
         
         aloitus_syöttö_1 = Entry(self.app, textvariable=self.start_node_var_1, font=('Arial', 10), width=5, state="readonly")
-        aloitus_syöttö_1.grid(row=3, column=11, padx=10, pady=5)
+        aloitus_syöttö_1.grid(row=3, column=2, padx=10, pady=5)
 
         lopetus_label_1 = Label(self.app, text='Lopetus 1', font=('Arial', 10))
-        lopetus_label_1.grid(row=4, column=10, padx=10, pady=5)
+        lopetus_label_1.grid(row=4, column=1, padx=10, pady=5)
         
         lopetus_syöttö_1 = Combobox(self.app, textvariable=self.end_node_var_1, values=self.valid_inputs, width=5)
-        lopetus_syöttö_1.grid(row=4, column=11, padx=10, pady=5)
+        lopetus_syöttö_1.grid(row=4, column=2, padx=10, pady=5)
 
         sub_btn_1 = Button(self.app, text='Hae Reitti', command=self.submit_gpg1)
-        sub_btn_1.grid(row=4, column=12, pady=7)
+        sub_btn_1.grid(row=4, column=3, pady=7)
   
         self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
         self.separator.grid(row=1, column=0, columnspan=14, padx=10, pady=10, sticky="ew") 
@@ -118,36 +118,39 @@ class Control_Panel:
         GPG2_label.grid(row=61, column=0, padx=10, pady=5)
         
         aloitus_label_2 = Label(self.app, text='Aloitus 2', font=('Arial', 10))
-        aloitus_label_2.grid(row=62, column=10, padx=10, pady=5)
+        aloitus_label_2.grid(row=62, column=1, padx=10, pady=5)
         
         aloitus_syöttö_2 = Entry(self.app, textvariable=self.start_node_var_2, font=('Arial', 10), width=5, state="readonly")
-        aloitus_syöttö_2.grid(row=62, column=11, padx=10, pady=5)
+        aloitus_syöttö_2.grid(row=62, column=2, padx=10, pady=5)
 
         lopetus_label_2 = Label(self.app, text='Lopetus 2', font=('Arial', 10))
-        lopetus_label_2.grid(row=63, column=10, padx=10, pady=5)
+        lopetus_label_2.grid(row=63, column=1, padx=10, pady=5)
         
         lopetus_syöttö_2 = Combobox(self.app, textvariable=self.end_node_var_2, values=self.valid_inputs, width=5)
-        lopetus_syöttö_2.grid(row=63, column=11, padx=10, pady=5)
+        lopetus_syöttö_2.grid(row=63, column=2, padx=10, pady=5)
 
         sub_btn_2 = Button(self.app, text='Hae Reitti', command=self.submit_gpg2)
-        sub_btn_2.grid(row=63, column=12, pady=7)
+        sub_btn_2.grid(row=63, column=3, pady=7)
         
         self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
         self.separator.grid(row=64, column=0, columnspan=14, padx=10, pady=10, sticky="ew")
   
     def create_edge_remover_handler(self): 
         node_in_edge_1 = Label(self.app, text='Node 1', font=('Arial', 10))
-        node_in_edge_1.grid(row=65, column=10, padx=10, pady=5) 
+        node_in_edge_1.grid(row=65, column=0, padx=10, pady=5) 
         node_in_edge_1 = Combobox(self.app, textvariable=self.remove_edge_1, values=self.valid_inputs, width=5)
-        node_in_edge_1.grid(row=65, column=11, padx=10, pady=5)
+        node_in_edge_1.grid(row=65, column=1, padx=10, pady=5)
         
         node_in_edge_2 = Label(self.app, text='Node 2', font=('Arial', 10))
-        node_in_edge_2.grid(row=66, column=10, padx=10, pady=5) 
+        node_in_edge_2.grid(row=66, column=0, padx=10, pady=5) 
         node_in_edge_2 = Combobox(self.app, textvariable=self.remove_edge_2, values=self.valid_inputs, width=5)
-        node_in_edge_2.grid(row=66, column=11, padx=10, pady=5)
+        node_in_edge_2.grid(row=66, column=1, padx=10, pady=5)
            
         sub_btn_3 = Button(self.app, text='Poista Edge', command=self.submit_remove_edge)
-        sub_btn_3.grid(row=66, column=12, pady=7)
+        sub_btn_3.grid(row=66, column=2, pady=7)
+        
+        sub_btn_4 = Button(self.app, text='Palauta edge', command=self.restore_edges)
+        sub_btn_4.grid(row=66, column=3, pady=7)
         
     def submit_remove_edge(self):
         Node1 = self.remove_edge_1.get()
@@ -218,6 +221,19 @@ class Control_Panel:
         #map_logic_execution_pause.clear()
 
         #Jatketaan socketin toimintaa
+        
+    def restore_edges(self):
+    
+        while PathFinding.removed_edges:
+            edge = PathFinding.removed_edges.pop()
+            node_1, node_2 = edge
+            weight = 2  
+
+            self.location_map.edges.append(edge)  
+            PathFinding.EDGES.append((node_1, node_2, weight))  
+            self.location_map.highlight_edge = None  
+            print(f"Node {node_1} and node {node_2} edge is restored")
+            
 
     def handle_button_press(self, command):
         print(f"Button clicked: {command}")
