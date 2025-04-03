@@ -49,13 +49,14 @@ class Control_Panel:
     
         self.app = Tk()
         self.app.title("Control Panel")
-        self.app.geometry("600x400")
+        self.app.geometry("600x500")
 
         self.b1 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press("GPG1"))
         self.b1.grid(row=3, column=0, padx=10, pady=10)
 
         self.b2 = Button(self.app, text="Start GPG2", command=lambda: self.handle_button_press("GPG2"))
         self.b2.grid(row=62, column=0, padx=10, pady=10)
+        
         
         self.button_open_map = Button(self.app, text="Open map", command=lambda: self.handle_button_press("open_map"))
         self.button_open_map.grid(row=0, column=10, padx=10, pady=10)
@@ -69,15 +70,23 @@ class Control_Panel:
         self.start_node_var_2 = StringVar(value="G3")
         self.end_node_var_2 = StringVar()
         self.end_node_var_2.trace_add("write", self.force_uppercase)
-           
+        
+        self.remove_edge_1 = StringVar()
+        self.remove_edge_1.trace_add("write", self.force_uppercase)
+        self.remove_edge_2 = StringVar()
+        self.remove_edge_2.trace_add("write", self.force_uppercase)
+        
         self.create_node_fields_gpg1()
         self.create_node_fields_gpg2()
-  
+        self.create_edge_remover_handler()
+        
         self.app.bind("<Escape>", self.close_app)
         
     def force_uppercase(self, *args):
         self.end_node_var_1.set(self.end_node_var_1.get().upper())
         self.end_node_var_2.set(self.end_node_var_2.get().upper())
+        self.remove_edge_1.set(self.remove_edge_1.get().upper())
+        self.remove_edge_2.set(self.remove_edge_2.get().upper())
 
     def close_app(self, event):
         self.app.destroy() #Close the control panel window
@@ -127,7 +136,27 @@ class Control_Panel:
         
         self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
         self.separator.grid(row=64, column=0, columnspan=14, padx=10, pady=10, sticky="ew")
+  
+    def create_edge_remover_handler(self): 
+        node_in_edge_1 = Label(self.app, text='Node 1', font=('Arial', 10))
+        node_in_edge_1.grid(row=65, column=10, padx=10, pady=5) 
+        node_in_edge_1 = Combobox(self.app, textvariable=self.remove_edge_1, values=self.valid_inputs, width=5)
+        node_in_edge_1.grid(row=65, column=11, padx=10, pady=5)
         
+        node_in_edge_2 = Label(self.app, text='Node 2', font=('Arial', 10))
+        node_in_edge_2.grid(row=66, column=10, padx=10, pady=5) 
+        node_in_edge_2 = Combobox(self.app, textvariable=self.remove_edge_2, values=self.valid_inputs, width=5)
+        node_in_edge_2.grid(row=66, column=11, padx=10, pady=5)
+        
+           
+        sub_btn_3 = Button(self.app, text='Poista Edge', command=self.submit_remove_edge)
+        sub_btn_3.grid(row=66, column=12, pady=7)
+        
+    def submit_remove_edge(self):
+        Node1 = self.remove_edge_1.get()
+        Node2 = self.remove_edge_2.get()
+        print(f"Edge from: {Node1} to {Node2} is removed") 
+       
     def submit_gpg1(self):
         Aloitus1 = self.start_node_var_1.get()
         Lopetus1 = self.end_node_var_1.get()
@@ -158,6 +187,9 @@ class Control_Panel:
         self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, )
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.run()
+        
+    
+        
 
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
@@ -210,8 +242,8 @@ class Control_Panel:
                 return
             else: 
                 self.open_and_run_socket(port=1026, the_id="gopigo_2")
-                self.b2.config(bg="green")
-
+                self.b2.config(bg="green")        
+        
         else:
             self.command_queue.put(
                 {
