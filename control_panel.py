@@ -183,11 +183,7 @@ class Control_Panel:
     def open_map(self):
         print("Open map button pressed.")
         self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, map_logic_execution_pause=map_logic_execution_pause, map_has_been_paused=map_has_been_paused)
-        #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.run()
-        
-    
-        
 
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
@@ -204,23 +200,15 @@ class Control_Panel:
         #Pysäytetään socketin toiminta
 
         #Poistetaan edge
-        print("In submit_remove_edge, target edge: ",target_edge)
-
         node_1, node_2 = target_edge
-        print("The nodes: ",node_1,node_2)
-
         for edge in self.location_map.edges:
             if edge == (node_1, node_2) or edge == (node_2, node_1):
-                print("The nodes correspond to an edge.")
-                
                 PathFinding.removed_edges.append(edge)
                 
                 node_1, node_2 = edge
                 weight = 2
 
                 PathFinding.EDGES.remove((node_1, node_2, weight))
-
-                print("A edge was removed.")
 
                 self.location_map.highlight_edge = edge
 
