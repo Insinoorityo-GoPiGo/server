@@ -17,6 +17,8 @@ class Control_Panel:
         self.coordinates = coordinates
         self.edges = edges
 
+        self.removed_edges = []
+
         self.command_queue = command_queue
         self.quit_flag = quit_flag
 
@@ -161,6 +163,22 @@ class Control_Panel:
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
+    def remove_edge(self, target_edge: tuple):
+        #Pysäytetään mapin toiminta
+        #Pysäytetään socketin toiminta
+
+        #Poistetaan edge
+        node_1, node_2 = target_edge
+        for edge in self.location_map.edges:
+            if edge == (node_1, node_2) or edge == (node_2, node_1):
+                index = self.location_map.edges.index(edge)
+                removed_edge = self.location_map.edges.pop(index)
+                self.removed_edges = removed_edge
+                break
+
+        #Jatketaan mapin toimintaa
+        #Jatketaan socketin toimintaa
+
     def handle_button_press(self, command):
         print(f"Button clicked: {command}")
        
@@ -178,7 +196,6 @@ class Control_Panel:
                 self.open_and_run_socket(port=1025, the_id="gopigo_1") 
                 self.b1.config(bg="green")
                     
-       
         elif command == "GPG2":
             if self.path is None:
                 print(f"Some Nodes are Missing from: {command}")
@@ -186,6 +203,7 @@ class Control_Panel:
             else: 
                 self.open_and_run_socket(port=1026, the_id="gopigo_2")
                 self.b2.config(bg="green")
+
         else:
             self.command_queue.put(
                 {
