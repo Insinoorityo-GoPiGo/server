@@ -3,9 +3,11 @@ from typing import Union
 from Graph import Graph
 
 class PathFinding:
-    def __init__(self, coordinates, edges):
+    EDGES = list()
+    removed_edges = list()
+
+    def __init__(self, coordinates):
         self.COORDINATES = coordinates
-        self.EDGES = edges
 
     def parse_graph(self):
         graph = Graph(coordinates=self.COORDINATES)

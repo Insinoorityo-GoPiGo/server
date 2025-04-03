@@ -20,8 +20,6 @@ class Control_Panel:
         self.coordinates = coordinates
         self.edges = edges
 
-        self.removed_edges = []
-
         self.command_queue = command_queue
         self.quit_flag = quit_flag
 
@@ -147,7 +145,6 @@ class Control_Panel:
         node_in_edge_2.grid(row=66, column=10, padx=10, pady=5) 
         node_in_edge_2 = Combobox(self.app, textvariable=self.remove_edge_2, values=self.valid_inputs, width=5)
         node_in_edge_2.grid(row=66, column=11, padx=10, pady=5)
-        
            
         sub_btn_3 = Button(self.app, text='Poista Edge', command=self.submit_remove_edge)
         sub_btn_3.grid(row=66, column=12, pady=7)
@@ -155,6 +152,7 @@ class Control_Panel:
     def submit_remove_edge(self):
         Node1 = self.remove_edge_1.get()
         Node2 = self.remove_edge_2.get()
+        print("In submit_remove_edge, node1: ",Node1," node2: ",Node2)
         self.remove_edge(target_edge=(Node1,Node2))
        
     def submit_gpg1(self):
@@ -164,7 +162,7 @@ class Control_Panel:
         print(f"Aloitus Node GPG1: {Aloitus1}")
         print(f"Lopetus Node GPG1: {Lopetus1}")
         
-        self.path = PathFinding(coordinates=self.coordinates, edges=self.edges).get_shortest_path(start=Aloitus1, end=Lopetus1)
+        self.path = PathFinding(coordinates=self.coordinates).get_shortest_path(start=Aloitus1, end=Lopetus1)
 
         self.end_node_var_1.set("")
         
@@ -184,7 +182,7 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, )
+        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, map_logic_execution_pause=map_logic_execution_pause, map_has_been_paused=map_has_been_paused)
         #(threading.Thread(target=self.location_map.run, daemon=True)).start()
         self.location_map.run()
         
@@ -200,22 +198,36 @@ class Control_Panel:
 
     def remove_edge(self, target_edge: tuple):
         #Pysäytetään mapin toiminta
-        map_logic_execution_pause.set()
-        map_has_been_paused.wait()
+        #map_logic_execution_pause.set()
+        #map_has_been_paused.wait()
 
         #Pysäytetään socketin toiminta
 
         #Poistetaan edge
-        #node_1, node_2 = target_edge
-        #for edge in self.location_map.edges:
-        #    if edge == (node_1, node_2) or edge == (node_2, node_1):
-        #        index = self.location_map.edges.index(edge)
-        #        removed_edge = self.location_map.edges.pop(index)
-        #        self.removed_edges = removed_edge
-        #        break
+        print("In submit_remove_edge, target edge: ",target_edge)
+
+        node_1, node_2 = target_edge
+        print("The nodes: ",node_1,node_2)
+
+        for edge in self.location_map.edges:
+            if edge == (node_1, node_2) or edge == (node_2, node_1):
+                print("The nodes correspond to an edge.")
+                
+                PathFinding.removed_edges.append(edge)
+                
+                node_1, node_2 = edge
+                weight = 2
+
+                PathFinding.EDGES.remove((node_1, node_2, weight))
+
+                print("A edge was removed.")
+
+                self.location_map.highlight_edge = edge
+
+                break
 
         #Jatketaan mapin toimintaa
-        map_logic_execution_pause.clear()
+        #map_logic_execution_pause.clear()
 
         #Jatketaan socketin toimintaa
 

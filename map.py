@@ -25,6 +25,8 @@ class Map:
 
         self.highlight_node_gpg_1 = "A0"
         self.highlight_node_gpg_2 = "G5"
+
+        self.highlight_edge = None
         
         self.fig, self.ax = plt.subplots()
         
@@ -32,18 +34,30 @@ class Map:
         self.update_graph()
         print("map init complete")
 
+    #def update_edges(self):
+    #    self.edges = [(coord_1, coord_2) for coord_1, coord_2, weight in self.edges]
+    #
+    #    self.G.add_nodes_from(self.points.keys())
+    #    self.G.add_edges_from(self.edges)
+
     def update_graph(self):
         self.ax.clear()
 
         node_colors = [ #highlighted noden värin määrittäminen
             "green" if node == self.highlight_node_gpg_1 
-            else "yellow" if node == self.highlight_node_gpg_2 
+            else "yellow" if node == self.highlight_node_gpg_2
             else "red"
             
             for node in self.G.nodes
         ]
 
-        nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color='gray', ax=self.ax)
+        edge_colors = [
+            "red" if edge == self.highlight_edge or edge[::-1] == self.highlight_edge 
+            else "gray"
+            for edge in self.G.edges
+        ]
+
+        nx.draw(self.G, self.points, node_color=node_colors, node_size=300, edge_color=edge_colors, ax=self.ax)
         nx.draw_networkx_labels(self.G, self.points, font_color="black", font_size=10, ax=self.ax)
 
         plt.show(block=False) #Figure 1 avataan
@@ -68,7 +82,7 @@ class Map:
         try:
             location = queue.get(block=False)
         except Empty:
-            print(" Jono on tyhjä")
+            #print(" Jono on tyhjä")
             location = None
 
         return location
@@ -89,14 +103,14 @@ class Map:
 
                 self.set_highlight(client_locations=client_locations)
 
-                notified = False
-                while self.map_logic_execution_pause.is_set():
-                    if notified is not True:
-                        self.map_has_been_paused.notify()
-                        print("Map has been paused notification")
-                        notified = True
-                    print("Map is paused")
-                    plt.pause(0.5)
+                #notified = False
+                #while self.map_logic_execution_pause.is_set():
+                #    if notified is not True:
+                #        self.map_has_been_paused.notify()
+                #        print("Map has been paused notification")
+                #        notified = True
+                #    print("Map is paused")
+                #    plt.pause(0.5)
 
 
                 if self.quit_flag.is_set():

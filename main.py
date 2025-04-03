@@ -4,10 +4,12 @@ import queue
 
 from control_panel import Control_Panel
 from get_coordinates_and_edges import get_coordinates_and_edges
+from PathFinding import PathFinding
 
 
 
 coordinates, edges = get_coordinates_and_edges()
+PathFinding.EDGES = edges
 
 quit_flag = threading.Event()
 command_queue = queue.Queue()
