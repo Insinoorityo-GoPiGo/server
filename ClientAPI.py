@@ -32,6 +32,7 @@ class ClientAPI():
         self.bot_id = bot_id
 
         self.state: str|None = None
+        self.new_route_for_returning_due_to_reroute: bool = False
 
         #server stuff
         self.quit_flag = quit_flag
@@ -179,6 +180,8 @@ class ClientAPI():
         while self.listening:
 
             if self.state == "REROUTED_FROM_CURRENT_TO_DESTINATION":
+                self.reroute_from_current_to_end()
+                self.new_route_for_returning_due_to_reroute = True
                 self.state = "STARTED"
             
             if self.state == "STARTED":
@@ -230,6 +233,7 @@ class ClientAPI():
 
                 #Check if removed edge was on the path.
                     #If yes reroute (from current node to destination)
+
                         #self.state = "REROUTED_FROM_CURRENT_TO_DESTINATION"
                         #break
 
@@ -243,6 +247,7 @@ class ClientAPI():
     def reroute_from_current_to_end(self):
         coordinates, _ = get_coordinates_and_edges()
         self.path = PathFinding(coordinates=coordinates).get_shortest_path(start=self.current_node, end=self.path[-1])
+        self.reset_node_markers()
 
     def reverse_path(self):
         self.path = list(reversed(self.path))
@@ -259,7 +264,14 @@ class ClientAPI():
         self.next_node = self.path[self.next_node_marker]
 
     def drive_back(self):
-        self.reverse_path() #or reroute_back_home()
+        if self.new_route_for_returning_due_to_reroute == True:
+            self.reroute_back_home()
+        else:
+            self.reverse_path()
+        
+        self.new_route_for_returning_due_to_reroute = False
+        self.state = "DRIVE_BACK"
+
         self.reset_node_markers()
         self.logic_loop()
 
