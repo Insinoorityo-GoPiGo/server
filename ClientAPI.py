@@ -224,6 +224,10 @@ class ClientAPI():
 
                 #:D
 
+    def reroute_from_current_to_end(self):
+        coordinates, _ = get_coordinates_and_edges()
+        self.path = PathFinding(coordinates=coordinates).get_shortest_path(start=self.current_node, end=self.path[-1])
+
     def reverse_path(self):
         self.path = list(reversed(self.path))
 
