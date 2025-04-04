@@ -84,7 +84,7 @@ class Map:
     def run(self):
         print("map started")
         try:
-            while plt.fignum_exists(self.fig.number):
+            while plt.fignum_exists(self.fig.number) and not self.quit_flag.is_set():
                 client_locations = (
                     location 
                     for location 
@@ -96,9 +96,6 @@ class Map:
                 )
 
                 self.set_highlight(client_locations=client_locations)
-
-                if self.quit_flag.is_set():
-                    break
                 
         except KeyboardInterrupt:
             plt.close('all')
@@ -106,6 +103,7 @@ class Map:
             print("An exception has occured in map.py run() function: ",e)
         finally:
             print("map.py has closed")
+            plt.close(self.fig)
 
         plt.ioff()
         plt.show()

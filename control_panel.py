@@ -14,7 +14,7 @@ from get_coordinates_and_edges import get_coordinates_and_edges
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self, command_queue, quit_flag):
+    def __init__(self, command_queue, map_quit_flag, client_quit_flag):
         
         self.socket_logic_execution_pause = {
             "gopigo_1": {
@@ -28,7 +28,8 @@ class Control_Panel:
         self.coordinates, self.edges = get_coordinates_and_edges()
 
         self.command_queue = command_queue
-        self.quit_flag = quit_flag
+        self.map_quit_flag = map_quit_flag
+        self.client_quit_flag = client_quit_flag
 
         self.location_queue_1 = queue.Queue()
         self.location_queue_2 = queue.Queue()
@@ -96,6 +97,9 @@ class Control_Panel:
         self.remove_edge_2.set(self.remove_edge_2.get().upper())
 
     def close_app(self, event):
+        if self.location_map is not None:
+            self.map_quit_flag.set()
+
         self.app.destroy() #Close the control panel window
      
     def create_node_fields_gpg1(self):
@@ -192,13 +196,13 @@ class Control_Panel:
         self.app.mainloop()
 
     def open_map(self):
-        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, highlighted_edge=self.highlighted_edge_for_map)
+        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.map_quit_flag, coordinates=self.coordinates, edges=self.edges, highlighted_edge=self.highlighted_edge_for_map)
         self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
         
-        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, pause_event=self.socket_logic_execution_pause)
+        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.client_quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, pause_event=self.socket_logic_execution_pause)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
