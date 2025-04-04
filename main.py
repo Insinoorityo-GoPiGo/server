@@ -1,5 +1,4 @@
 import threading
-import asyncio
 import queue
 
 from control_panel import Control_Panel

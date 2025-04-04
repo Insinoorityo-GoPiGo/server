@@ -1,8 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from queue import Empty
-import tkinter as tk
-import time
 import copy
 
 from get_coordinates_and_edges import get_coordinates_and_edges
