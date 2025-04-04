@@ -31,6 +31,8 @@ class ClientAPI():
 
         self.bot_id = bot_id
 
+        self.state: str|None = None
+
         #server stuff
         self.quit_flag = quit_flag
 
@@ -172,15 +174,22 @@ class ClientAPI():
                 self.command_queue.put(command)
 
     def logic(self):
-        print("In ClientAPI.logic(), before while")
+        self.state = "STARTED"
+        
         while self.listening:
-            print("First path driving")
-            self.logic_loop()
-            print("Second path driving")
-            self.drive_back()
-            print("Done driving.")
-            self.quit_flag.set()
-            self.close_connection()
+
+            if self.state == "REROUTED_FROM_CURRENT_TO_DESTINATION":
+                self.state = "STARTED"
+            
+            if self.state == "STARTED":
+                self.logic_loop()
+            
+            if self.state == "DRIVE_BACK":
+                self.drive_back()
+            
+            if self.state == "RETURNED_HOME":
+                self.quit_flag.set()
+                self.close_connection()
 
     def logic_loop(self):
         if self.current_node_marker == 0:
@@ -221,8 +230,15 @@ class ClientAPI():
 
                 #Check if removed edge was on the path.
                     #If yes reroute (from current node to destination)
+                        #self.state = "REROUTED_FROM_CURRENT_TO_DESTINATION"
+                        #break
 
                 #:D
+
+        if self.state == "STARTED":
+            self.state = "DRIVE_BACK"
+        elif self.state == "DRIVE_BACK":
+            self.state = "RETURNED_HOME"
 
     def reroute_from_current_to_end(self):
         coordinates, _ = get_coordinates_and_edges()

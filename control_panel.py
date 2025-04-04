@@ -166,6 +166,7 @@ class Control_Panel:
         print(f"Lopetus Node GPG1: {Lopetus1}")
         
         self.path = PathFinding(coordinates=self.coordinates).get_shortest_path(start=Aloitus1, end=Lopetus1)
+        print("path: ",self.path)
 
         self.end_node_var_1.set("")
         
