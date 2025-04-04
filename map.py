@@ -5,7 +5,7 @@ import tkinter as tk
 import time
 
 class Map:
-    def __init__(self, quit_flag, location_queue_1, location_queue_2, coordinates, edges):
+    def __init__(self, quit_flag, location_queue_1, location_queue_2, coordinates, edges, highlighted_edge):
         self.quit_flag = quit_flag
 
         self.location_queue_1 = location_queue_1
@@ -16,6 +16,7 @@ class Map:
 
         self.points = coordinates
         self.edges = [(coord_1, coord_2) for coord_1, coord_2, weight in edges]
+        print("The edges in the map: ",self.edges)
 
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
@@ -23,7 +24,9 @@ class Map:
         self.highlight_node_gpg_1 = "A0"
         self.highlight_node_gpg_2 = "G5"
 
-        self.highlight_edge = None
+        print("highlighted_edge: ",highlighted_edge)
+        self.highlight_edge = highlighted_edge
+        print("self.highlight_edge: ",self.highlight_edge)
         
         self.fig, self.ax = plt.subplots()
         

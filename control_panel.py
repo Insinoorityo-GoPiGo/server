@@ -9,11 +9,12 @@ from dotenv import load_dotenv
 from map import Map
 from PathFinding import PathFinding
 from ClientAPI import ClientAPI
+from get_coordinates_and_edges import get_coordinates_and_edges
 
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self, command_queue, quit_flag, coordinates, edges):
+    def __init__(self, command_queue, quit_flag):
         
         self.socket_logic_execution_pause = {
             "gopigo_1": {
@@ -24,8 +25,7 @@ class Control_Panel:
             },
         }
         
-        self.coordinates = coordinates
-        self.edges = edges
+        self.coordinates, self.edges = get_coordinates_and_edges()
 
         self.command_queue = command_queue
         self.quit_flag = quit_flag
@@ -49,6 +49,8 @@ class Control_Panel:
 
         self.path: None|list = None
         self.location_map: None|Map = None
+
+        self.highlighted_edge_for_map = None
 
         self.chosen_client_id = None
     
@@ -184,7 +186,7 @@ class Control_Panel:
         print(f"Aloitus Node GPG2: {Aloitus2}")
         print(f"Lopetus Node GPG2: {Lopetus2}")
 
-        self.path = PathFinding(coordinates=self.coordinates, edges=self.edges).get_shortest_path(start=Aloitus2, end=Lopetus2)
+        self.path = PathFinding(coordinates=self.coordinates).get_shortest_path(start=Aloitus2, end=Lopetus2)
         
         self.end_node_var_2.set("")
 
@@ -193,7 +195,8 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges)
+        print("Before opening the Map(), self.highlighted_edge_for_map: ",self.highlighted_edge_for_map)
+        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, highlighted_edge=self.highlighted_edge_for_map)
         self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):
@@ -210,9 +213,19 @@ class Control_Panel:
         #    socket["event"].set()
 
         #Poistetaan edge
+        print("remove_edge() -funktion alussa")
+        print("target_edge: ",target_edge)
+
         node_1, node_2 = target_edge
-        for edge in self.location_map.edges: #TODO: Kaatuu jos map ei ole päällä
+        print("node_1: ",node_1,"node_2: ",node_2)
+
+        _, edges = get_coordinates_and_edges()
+        edges = [(coord_1, coord_2) for coord_1, coord_2, weight in edges]
+
+        for edge in edges:
             if edge == (node_1, node_2) or edge == (node_2, node_1):
+
+                #Remove the edge for rerouting in the sockets
                 PathFinding.removed_edges.append(edge)
                 
                 node_1, node_2 = edge
@@ -220,7 +233,15 @@ class Control_Panel:
 
                 PathFinding.EDGES.remove((node_1, node_2, weight))
 
-                self.location_map.highlight_edge = edge
+                print("edge: ",edge)
+
+                #Highlight the removed edge on the map
+                if self.location_map == None:
+                    self.highlighted_edge_for_map = edge
+                    print("The edge was put into self.highlighted_edge_for_map")
+                else:
+                    self.location_map.highlight_edge = edge
+                    print("The edge was put into self.location_map.highlight_edge")
 
                 break
 
