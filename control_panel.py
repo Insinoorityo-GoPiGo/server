@@ -124,7 +124,7 @@ class Control_Panel:
         self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
         self.separator.grid(row=1, column=0, columnspan=14, padx=10, pady=10, sticky="ew") 
         self.separator1 = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
-        self.separator1.grid(row=5, column=0, columnspan=14, padx=10, pady=10, sticky="ew")  
+        self.separator1.grid(row=5, column=0, columnspan=14, padx=10, pady=10, sticky="ew")
         
     def create_node_fields_gpg2(self):
         GPG2_label = Label(self.app, text="GoPiGo 2 Ohjaus", font=('Arial', 10, 'bold'))
