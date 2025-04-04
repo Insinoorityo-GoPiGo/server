@@ -164,7 +164,6 @@ class Control_Panel:
     def submit_remove_edge(self):
         Node1 = self.remove_edge_1.get()
         Node2 = self.remove_edge_2.get()
-        print("In submit_remove_edge, node1: ",Node1," node2: ",Node2)
         self.remove_edge(target_edge=(Node1,Node2))
        
     def submit_gpg1(self):
@@ -175,7 +174,6 @@ class Control_Panel:
         print(f"Lopetus Node GPG1: {Lopetus1}")
         
         self.path = PathFinding(coordinates=self.coordinates).get_shortest_path(start=Aloitus1, end=Lopetus1)
-        print("path: ",self.path)
 
         self.end_node_var_1.set("")
         
@@ -194,8 +192,6 @@ class Control_Panel:
         self.app.mainloop()
 
     def open_map(self):
-        print("Open map button pressed.")
-        print("Before opening the Map(), self.highlighted_edge_for_map: ",self.highlighted_edge_for_map)
         self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, highlighted_edge=self.highlighted_edge_for_map)
         self.location_map.run()
 
@@ -213,11 +209,7 @@ class Control_Panel:
         #    socket["event"].set()
 
         #Poistetaan edge
-        print("remove_edge() -funktion alussa")
-        print("target_edge: ",target_edge)
-
         node_1, node_2 = target_edge
-        print("node_1: ",node_1,"node_2: ",node_2)
 
         _, edges = get_coordinates_and_edges()
         edges = [(coord_1, coord_2) for coord_1, coord_2, weight in edges]
@@ -233,22 +225,17 @@ class Control_Panel:
 
                 PathFinding.EDGES.remove((node_1, node_2, weight))
 
-                print("edge: ",edge)
-
                 #Highlight the removed edge on the map
                 if self.location_map == None:
                     self.highlighted_edge_for_map = edge
-                    print("The edge was put into self.highlighted_edge_for_map")
                 else:
                     self.location_map.highlight_edge = edge
-                    print("The edge was put into self.location_map.highlight_edge")
 
                 break
 
         #Jatketaan socketin toimintaa
         
     def restore_edges(self):
-    
         while PathFinding.removed_edges:
             edge = PathFinding.removed_edges.pop()
             node_1, node_2 = edge
@@ -257,12 +244,8 @@ class Control_Panel:
             self.location_map.edges.append(edge)  
             PathFinding.EDGES.append((node_1, node_2, weight))  
             self.location_map.highlight_edge = None  
-            print(f"Node {node_1} and node {node_2} edge is restored")
-            
 
     def handle_button_press(self, command):
-        print(f"Button clicked: {command}")
-       
         if command is None or command == "":
             print("No command received")
             pass
