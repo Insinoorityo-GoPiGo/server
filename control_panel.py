@@ -193,10 +193,6 @@ class Control_Panel:
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
     def remove_edge(self, target_edge: tuple):
-        #Pysäytetään mapin toiminta
-        #map_logic_execution_pause.set()
-        #map_has_been_paused.wait()
-
         #Pysäytetään socketin toiminta
 
         #Poistetaan edge
@@ -213,9 +209,6 @@ class Control_Panel:
                 self.location_map.highlight_edge = edge
 
                 break
-
-        #Jatketaan mapin toimintaa
-        #map_logic_execution_pause.clear()
 
         #Jatketaan socketin toimintaa
 

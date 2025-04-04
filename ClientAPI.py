@@ -3,6 +3,9 @@ from string import ascii_letters
 import json
 import re
 
+from PathFinding import PathFinding
+from get_coordinates_and_edges import get_coordinates_and_edges
+
 class ClientAPI():
     def __init__(self, host, port, path, quit_flag, location_queue, command_queue, default_direction="east", bot_id="gopigo_1"):     
         #Client control stuff
@@ -12,6 +15,7 @@ class ClientAPI():
         self.ID = bot_id
 
         self.path = path
+        self.home_node = path[0]
 
         self.current_node_marker = 0
         self.next_node_marker = self.current_node_marker + 1
@@ -213,8 +217,19 @@ class ClientAPI():
             
             self.update_location() #Markereita yks pykälä eteen päin
 
+            #if pause_event.is_set():
+
+                #Check if removed edge was on the path.
+                    #If yes reroute (from current node to destination)
+
+                #:D
+
     def reverse_path(self):
         self.path = list(reversed(self.path))
+
+    def reroute_back_home(self):
+        coordinates, _ = get_coordinates_and_edges()
+        self.path = PathFinding(coordinates=coordinates).get_shortest_path(start=self.current_node, end=self.home_node)
 
     def reset_node_markers(self):
         self.current_node_marker = 0
@@ -224,7 +239,7 @@ class ClientAPI():
         self.next_node = self.path[self.next_node_marker]
 
     def drive_back(self):
-        self.reverse_path()
+        self.reverse_path() #or reroute_back_home()
         self.reset_node_markers()
         self.logic_loop()
 

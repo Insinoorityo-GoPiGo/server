@@ -34,12 +34,6 @@ class Map:
         self.update_graph()
         print("map init complete")
 
-    #def update_edges(self):
-    #    self.edges = [(coord_1, coord_2) for coord_1, coord_2, weight in self.edges]
-    #
-    #    self.G.add_nodes_from(self.points.keys())
-    #    self.G.add_edges_from(self.edges)
-
     def update_graph(self):
         self.ax.clear()
 
@@ -82,12 +76,12 @@ class Map:
         try:
             location = queue.get(block=False)
         except Empty:
-            #print(" Jono on tyhjä")
+            #print("Jono on tyhjä")
             location = None
 
         return location
 
-    def run(self): #IDEA: async
+    def run(self):
         print("map started")
         try:
             while plt.fignum_exists(self.fig.number):
@@ -102,16 +96,6 @@ class Map:
                 )
 
                 self.set_highlight(client_locations=client_locations)
-
-                #notified = False
-                #while self.map_logic_execution_pause.is_set():
-                #    if notified is not True:
-                #        self.map_has_been_paused.notify()
-                #        print("Map has been paused notification")
-                #        notified = True
-                #    print("Map is paused")
-                #    plt.pause(0.5)
-
 
                 if self.quit_flag.is_set():
                     break
