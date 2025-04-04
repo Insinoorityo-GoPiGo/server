@@ -12,11 +12,18 @@ from ClientAPI import ClientAPI
 
 load_dotenv()
 
-map_logic_execution_pause = threading.Event()
-map_has_been_paused = threading.Condition()
-
 class Control_Panel:
     def __init__(self, command_queue, quit_flag, coordinates, edges):
+        
+        self.socket_logic_execution_pause = {
+            "gopigo_1": {
+                "event": threading.Event()
+            },
+            "gopigo_2": {
+                "event": threading.Event()
+            },
+        }
+        
         self.coordinates = coordinates
         self.edges = edges
 
@@ -186,18 +193,21 @@ class Control_Panel:
 
     def open_map(self):
         print("Open map button pressed.")
-        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges, map_logic_execution_pause=map_logic_execution_pause, map_has_been_paused=map_has_been_paused)
+        self.location_map = Map(location_queue_1 = self.location_queue_1, location_queue_2 = self.location_queue_2, quit_flag=self.quit_flag, coordinates=self.coordinates, edges=self.edges)
         self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
         
-        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id)
+        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, pause_event=self.socket_logic_execution_pause)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
     def remove_edge(self, target_edge: tuple):
         #Pysäytetään socketin toiminta
+        
+        #for socket in self.socket_logic_execution_pause:
+        #    socket["event"].set()
 
         #Poistetaan edge
         node_1, node_2 = target_edge
