@@ -233,7 +233,7 @@ class ClientAPI():
             self.update_location() #Markereita yks pykälä eteen päin
 
             if self.pause_event[self.ID]["event"].is_set():
-                #Waiting with Condition?
+                #TODO: Waiting with Condition?
                 if PathFinding.removed_edges in self.path: #Check if the removed edge was on the path.
                     self.state = "REROUTED_FROM_CURRENT_TO_DESTINATION" #If yes reroute (from current node to destination)
                     break

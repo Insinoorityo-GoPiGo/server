@@ -203,7 +203,7 @@ class Control_Panel:
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
-    def remove_edge(self, target_edge: tuple):
+    def remove_edge(self, target_edge: tuple): 
         #Pysäytetään socketin toiminta
         
         #for socket in self.socket_logic_execution_pause:
@@ -211,7 +211,7 @@ class Control_Panel:
 
         #Poistetaan edge
         node_1, node_2 = target_edge
-        for edge in self.location_map.edges:
+        for edge in self.location_map.edges: #TODO: Kaatuu jos map ei ole päällä
             if edge == (node_1, node_2) or edge == (node_2, node_1):
                 PathFinding.removed_edges.append(edge)
                 
