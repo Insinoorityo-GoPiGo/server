@@ -5,9 +5,10 @@ from Graph import Graph
 class PathFinding:
     EDGES = list()
     removed_edges = list()
+    COORDINATES = dict()
 
-    def __init__(self, coordinates):
-        self.COORDINATES = coordinates
+    def __init__(self):
+        pass
 
     def parse_graph(self):
         graph = Graph(coordinates=self.COORDINATES)

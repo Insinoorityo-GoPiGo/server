@@ -3,9 +3,12 @@ import matplotlib.pyplot as plt
 from queue import Empty
 import tkinter as tk
 import time
+import copy
+
+from get_coordinates_and_edges import get_coordinates_and_edges
 
 class Map:
-    def __init__(self, quit_flag, location_queue_1, location_queue_2, coordinates, edges, highlighted_edge):
+    def __init__(self, quit_flag, location_queue_1, location_queue_2, highlighted_edge):
         self.quit_flag = quit_flag
 
         self.location_queue_1 = location_queue_1
@@ -14,9 +17,11 @@ class Map:
         # Määritellään graafi
         self.G = nx.Graph()
 
-        self.points = coordinates
-        self.edges = [(coord_1, coord_2) for coord_1, coord_2, weight in edges]
-        print("The edges in the map: ",self.edges)
+        coordinates, edges = get_coordinates_and_edges()
+        self.points = copy.deepcopy(coordinates)
+        self.edges = copy.deepcopy([(coord_1, coord_2) for coord_1, coord_2, weight in edges])
+        del coordinates
+        del edges
 
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
@@ -24,15 +29,12 @@ class Map:
         self.highlight_node_gpg_1 = "A0"
         self.highlight_node_gpg_2 = "G5"
 
-        print("highlighted_edge: ",highlighted_edge)
         self.highlight_edge = highlighted_edge
-        print("self.highlight_edge: ",self.highlight_edge)
         
         self.fig, self.ax = plt.subplots()
         
         plt.ion()
         self.update_graph()
-        print("map init complete")
 
     def update_graph(self):
         self.ax.clear()

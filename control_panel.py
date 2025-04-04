@@ -24,8 +24,6 @@ class Control_Panel:
                 "event": threading.Event()
             },
         }
-        
-        self.coordinates, self.edges = get_coordinates_and_edges()
 
         self.command_queue = command_queue
         self.map_quit_flag = map_quit_flag
@@ -177,7 +175,7 @@ class Control_Panel:
         print(f"Aloitus Node GPG1: {Aloitus1}")
         print(f"Lopetus Node GPG1: {Lopetus1}")
         
-        self.path = PathFinding(coordinates=self.coordinates).get_shortest_path(start=Aloitus1, end=Lopetus1)
+        self.path = PathFinding().get_shortest_path(start=Aloitus1, end=Lopetus1)
 
         self.end_node_var_1.set("")
         
@@ -188,7 +186,7 @@ class Control_Panel:
         print(f"Aloitus Node GPG2: {Aloitus2}")
         print(f"Lopetus Node GPG2: {Lopetus2}")
 
-        self.path = PathFinding(coordinates=self.coordinates).get_shortest_path(start=Aloitus2, end=Lopetus2)
+        self.path = PathFinding().get_shortest_path(start=Aloitus2, end=Lopetus2)
         
         self.end_node_var_2.set("")
 
@@ -196,7 +194,7 @@ class Control_Panel:
         self.app.mainloop()
 
     def open_map(self):
-        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.map_quit_flag, coordinates=self.coordinates, edges=self.edges, highlighted_edge=self.highlighted_edge_for_map)
+        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.map_quit_flag, highlighted_edge=self.highlighted_edge_for_map)
         self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):
