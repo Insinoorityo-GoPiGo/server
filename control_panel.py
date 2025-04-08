@@ -107,7 +107,7 @@ class Control_Panel:
         aloitus_label_1 = Label(self.app, text='Aloitus 1', font=('Arial', 10))
         aloitus_label_1.grid(row=3, column=1, padx=10, pady=5)
         
-        aloitus_syöttö_1 = Entry(self.app, textvariable=self.start_node_var_1, font=('Arial', 10), width=5, state="readonly")
+        aloitus_syöttö_1 = Combobox(self.app, textvariable=self.start_node_var_1, font=('Arial', 10), values=self.valid_inputs, width=5)
         aloitus_syöttö_1.grid(row=3, column=2, padx=10, pady=5)
 
         lopetus_label_1 = Label(self.app, text='Lopetus 1', font=('Arial', 10))
@@ -131,7 +131,7 @@ class Control_Panel:
         aloitus_label_2 = Label(self.app, text='Aloitus 2', font=('Arial', 10))
         aloitus_label_2.grid(row=62, column=1, padx=10, pady=5)
         
-        aloitus_syöttö_2 = Entry(self.app, textvariable=self.start_node_var_2, font=('Arial', 10), width=5, state="readonly")
+        aloitus_syöttö_2 = Combobox(self.app, textvariable=self.start_node_var_2, font=('Arial', 10), values=self.valid_inputs, width=5)
         aloitus_syöttö_2.grid(row=62, column=2, padx=10, pady=5)
 
         lopetus_label_2 = Label(self.app, text='Lopetus 2', font=('Arial', 10))
