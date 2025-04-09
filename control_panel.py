@@ -54,6 +54,8 @@ class Control_Panel:
             "G1", "G2", "G3", "G4",
             "G5", "G6", "G7", "G8", "G9", "G10"
         ]
+        
+        self.options_gpg = ["GoPiGo 1", "GoPiGo 2", "Molemmat"]
 
         self.path: None|list = None
         self.location_map: None|Map = None
@@ -67,7 +69,7 @@ class Control_Panel:
     
         self.app = Tk()
         self.app.title("Control Panel")
-        self.app.geometry("600x500")
+        self.app.geometry("600x600")
 
         self.b1 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press("GPG1"))
         self.b1.grid(row=3, column=0, padx=10, pady=10)
@@ -99,6 +101,7 @@ class Control_Panel:
         self.create_node_fields_gpg1()
         self.create_node_fields_gpg2()
         self.create_edge_remover_handler()
+        self.gopigo_state_handelr()
         
         self.app.bind("<Escape>", self.close_app)
         
@@ -184,6 +187,34 @@ class Control_Panel:
         Node1 = self.remove_edge_1.get()
         Node2 = self.remove_edge_2.get()
         self.remove_edge(target_edge=(Node1,Node2))
+        
+    def gopigo_state_handelr(self):
+        self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
+        self.separator.grid(row=68, column=0, columnspan=14, padx=10, pady=10, sticky="ew")
+        
+        Pause_GPG = Label(self.app, text='Pasue selected GPG', font=('Arial', 10))
+        Pause_GPG.grid(row=69, column=0, padx=10, pady=5) 
+        Pause_GPG = Combobox(self.app, values=self.options_gpg, width=5)
+        Pause_GPG.grid(row=69, column=1, padx=10, pady=5)
+        self.sub_btn_5 = Button(self.app, text='Pause', command=self.pause_gpg)
+        self.sub_btn_5.grid(row=69, column=2, pady=7)
+        
+        
+        Continue_GPG = Label(self.app, text='Continue GPG', font=('Arial', 10))
+        Continue_GPG.grid(row=70, column=0, padx=10, pady=5) 
+        Continue_GPG = Combobox(self.app, values=self.options_gpg, width=5)
+        Continue_GPG.grid(row=70, column=1, padx=10, pady=5)
+        self.sub_btn_6 = Button(self.app, text='Continue', command=self.continue_gpg )
+        self.sub_btn_6.grid(row=70, column=2, pady=7)
+     
+    def pause_gpg(self):
+        self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+        self.socket_logic_execution_pause["gopigo_2"]["event"].set()
+        
+    def continue_gpg(self):
+        self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
+        self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
+           
        
     def submit_gpg1(self):
         Aloitus1 = self.start_node_var_1.get()
