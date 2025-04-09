@@ -194,6 +194,10 @@ class ClientAPI():
                 self.drive_back()
             
             if self.state == "RETURNED_HOME":
+                self.send_command(command="TURN_TWICE_RIGHT") #Turn GoPiGo back to its default direction
+                confirmation = self.receive_message_from_client()
+                self.confirm(expected="TURN_OK", confirmation=confirmation)
+
                 self.quit_flag.set()
                 self.close_connection()
 
