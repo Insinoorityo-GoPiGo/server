@@ -52,6 +52,9 @@ class Control_Panel:
         self.highlighted_edge_for_map = None
 
         self.chosen_client_id = None
+
+        self.gpg_1_start_node: str|None = None #For start node that's displayed on map
+        self.gpg_2_start_node: str|None = None
     
         self.app = Tk()
         self.app.title("Control Panel")
@@ -69,11 +72,11 @@ class Control_Panel:
         map_label = Label(self.app, text='Käynnistä Kartta', font=('Arial', 10))
         map_label.grid(row=0, column=0, padx=10, pady=5)
         
-        self.start_node_var_1 = StringVar(value="A0")
+        self.start_node_var_1 = StringVar()
         self.end_node_var_1 = StringVar()
         self.end_node_var_1.trace_add("write", self.force_uppercase)
         
-        self.start_node_var_2 = StringVar(value="G3")
+        self.start_node_var_2 = StringVar()
         self.end_node_var_2 = StringVar()
         self.end_node_var_2.trace_add("write", self.force_uppercase)
         
@@ -107,7 +110,7 @@ class Control_Panel:
         aloitus_label_1 = Label(self.app, text='Aloitus 1', font=('Arial', 10))
         aloitus_label_1.grid(row=3, column=1, padx=10, pady=5)
         
-        aloitus_syöttö_1 = Entry(self.app, textvariable=self.start_node_var_1, font=('Arial', 10), width=5, state="readonly")
+        aloitus_syöttö_1 = Combobox(self.app, textvariable=self.start_node_var_1, values=self.valid_inputs, width=5)
         aloitus_syöttö_1.grid(row=3, column=2, padx=10, pady=5)
 
         lopetus_label_1 = Label(self.app, text='Lopetus 1', font=('Arial', 10))
@@ -131,7 +134,7 @@ class Control_Panel:
         aloitus_label_2 = Label(self.app, text='Aloitus 2', font=('Arial', 10))
         aloitus_label_2.grid(row=62, column=1, padx=10, pady=5)
         
-        aloitus_syöttö_2 = Entry(self.app, textvariable=self.start_node_var_2, font=('Arial', 10), width=5, state="readonly")
+        aloitus_syöttö_2 = Combobox(self.app, textvariable=self.start_node_var_2, values=self.valid_inputs, width=5)
         aloitus_syöttö_2.grid(row=62, column=2, padx=10, pady=5)
 
         lopetus_label_2 = Label(self.app, text='Lopetus 2', font=('Arial', 10))
@@ -172,6 +175,8 @@ class Control_Panel:
         Aloitus1 = self.start_node_var_1.get()
         Lopetus1 = self.end_node_var_1.get()
 
+        self.gpg_1_start_node = Aloitus1 #For highlighted node in map
+
         print(f"Aloitus Node GPG1: {Aloitus1}")
         print(f"Lopetus Node GPG1: {Lopetus1}")
         
@@ -182,6 +187,8 @@ class Control_Panel:
     def submit_gpg2(self):
         Aloitus2 = self.start_node_var_2.get()
         Lopetus2 = self.end_node_var_2.get()
+
+        self.gpg_2_start_node = Aloitus2
 
         print(f"Aloitus Node GPG2: {Aloitus2}")
         print(f"Lopetus Node GPG2: {Lopetus2}")
@@ -194,7 +201,7 @@ class Control_Panel:
         self.app.mainloop()
 
     def open_map(self):
-        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.map_quit_flag, highlighted_edge=self.highlighted_edge_for_map)
+        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.map_quit_flag, highlighted_edge=self.highlighted_edge_for_map, highlighted_start_node_gpg_1=self.gpg_1_start_node, highlighted_start_node_gpg_2=self.gpg_2_start_node)
         self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):
@@ -234,8 +241,6 @@ class Control_Panel:
                     self.location_map.highlight_edge = edge
 
                 break
-
-        #Jatketaan socketin toimintaa
         
     def restore_edges(self):
         while PathFinding.removed_edges:
@@ -258,7 +263,7 @@ class Control_Panel:
             if self.path is None:
                 print(f"Some Nodes are Missing from: {command}")
                 return  
-            else: 
+            else:
                 self.open_and_run_socket(port=1025, the_id="gopigo_1") 
                 self.b1.config(bg="green")
                     

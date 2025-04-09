@@ -6,7 +6,7 @@ import copy
 from get_coordinates_and_edges import get_coordinates_and_edges
 
 class Map:
-    def __init__(self, quit_flag, location_queue_1, location_queue_2, highlighted_edge):
+    def __init__(self, quit_flag, location_queue_1, location_queue_2, highlighted_edge, highlighted_start_node_gpg_1, highlighted_start_node_gpg_2):
         self.quit_flag = quit_flag
 
         self.location_queue_1 = location_queue_1
@@ -24,8 +24,8 @@ class Map:
         self.G.add_nodes_from(self.points.keys())
         self.G.add_edges_from(self.edges)
 
-        self.highlight_node_gpg_1 = "A0"
-        self.highlight_node_gpg_2 = "G5"
+        self.highlight_node_gpg_1: str = highlighted_start_node_gpg_1 #A0
+        self.highlight_node_gpg_2: str = highlighted_start_node_gpg_2 #G5
 
         self.highlight_edge = highlighted_edge
         

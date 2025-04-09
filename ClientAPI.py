@@ -10,8 +10,8 @@ from get_coordinates_and_edges import get_coordinates_and_edges
 class ClientAPI():
     def __init__(self, host, port, path, quit_flag, location_queue, command_queue, pause_event, default_direction="east", bot_id="gopigo_1"):     
         #Client control stuff
-        self.pause_event: dict[dict[threading.Event]] = pause_event
-        
+        self.pause_event: dict[str,dict[str,threading.Event]] = pause_event
+
         self.location_queue = location_queue
         self.command_queue = command_queue
 
@@ -235,7 +235,6 @@ class ClientAPI():
             with self.pause_event[self.ID]["event"] as event:
                 if event.is_set():
                     event.clear()
-                    #TODO: Waiting with Condition?
                     if PathFinding.removed_edges in self.path: #Check if the removed edge was on the path.
                         self.state = "REROUTED_FROM_CURRENT_TO_DESTINATION" #If yes reroute (from current node to destination)
                         break
