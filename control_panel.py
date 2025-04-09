@@ -16,6 +16,15 @@ load_dotenv()
 class Control_Panel:
     def __init__(self, command_queue, map_quit_flag, client_quit_flag):
         
+        self.rerouting_check = {
+            "gopigo_1": {
+                "event": threading.Event()
+            },
+            "gopigo_2": {
+                "event": threading.Event()
+            },
+        }
+
         self.socket_logic_execution_pause = {
             "gopigo_1": {
                 "event": threading.Event()
@@ -220,14 +229,14 @@ class Control_Panel:
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
         
-        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.client_quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, pause_event=self.socket_logic_execution_pause)
+        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.client_quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, rerouting_check=self.rerouting_check, stop_pause_event=self.socket_logic_execution_pause)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
     def remove_edge(self, target_edge: tuple):
         #Pysäytetään socketin toiminta
         
-        #for socket in self.socket_logic_execution_pause:
+        #for socket in self.rerouting_check:
         #    socket["event"].set()
 
         #Poistetaan edge

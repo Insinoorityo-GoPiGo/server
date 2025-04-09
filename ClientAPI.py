@@ -8,9 +8,10 @@ from PathFinding import PathFinding
 from get_coordinates_and_edges import get_coordinates_and_edges
 
 class ClientAPI():
-    def __init__(self, host, port, path, quit_flag, location_queue, command_queue, pause_event, default_direction="east", bot_id="gopigo_1"):     
+    def __init__(self, host, port, path, quit_flag, location_queue, command_queue, rerouting_check, stop_pause_event, default_direction="east", bot_id="gopigo_1"):     
         #Client control stuff
-        self.pause_event: dict[str,dict[str,threading.Event]] = pause_event
+        self.rerouting_check: dict[str,dict[str,threading.Event]] = rerouting_check
+        self.client_stop_pause_event: dict[str,dict[str,threading.Event]] = stop_pause_event
 
         self.location_queue = location_queue
         self.command_queue = command_queue
@@ -206,7 +207,7 @@ class ClientAPI():
             self.send_command(command="ARE_YOU_READY") #Send a check to client to make sure it's ready
             print("In logic_loop, after sending the command")
 
-            confirmation = self.receive_message_from_client() #This is where the error comes from.
+            confirmation = self.receive_message_from_client()
 
             ###
 
@@ -236,9 +237,11 @@ class ClientAPI():
             
             self.update_location() #Markereita yks pykälä eteen päin
 
-            
-            if self.pause_event[self.ID]["event"].is_set():
-                self.pause_event[self.ID]["event"].clear()
+            if self.client_stop_pause_event[self.ID]["event"].is_set(): #Stop/pause client and wait for continuing
+                self.client_stop_pause_event[self.ID]["event"].wait()
+
+            if self.rerouting_check[self.ID]["event"].is_set():
+                self.rerouting_check[self.ID]["event"].clear()
                 if PathFinding.removed_edges in self.path: #Check if the removed edge was on the path.
                     self.state = "REROUTED_FROM_CURRENT_TO_DESTINATION" #If yes reroute (from current node to destination)
                     break
