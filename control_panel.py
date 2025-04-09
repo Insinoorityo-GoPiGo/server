@@ -182,6 +182,9 @@ class Control_Panel:
 
         self.gpg_1_start_node = Aloitus1 #For highlighted node in map
 
+        if self.location_map is not None:
+            self.location_map.highlight_node_gpg_1 = self.gpg_1_start_node
+
         print(f"Aloitus Node GPG1: {Aloitus1}")
         print(f"Lopetus Node GPG1: {Lopetus1}")
         
@@ -194,6 +197,9 @@ class Control_Panel:
         Lopetus2 = self.end_node_var_2.get()
 
         self.gpg_2_start_node = Aloitus2
+
+        if self.location_map is not None:
+            self.location_map.highlight_node_gpg_2 = self.gpg_2_start_node
 
         print(f"Aloitus Node GPG2: {Aloitus2}")
         print(f"Lopetus Node GPG2: {Lopetus2}")
