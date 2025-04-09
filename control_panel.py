@@ -3,6 +3,7 @@ import threading
 from tkinter.ttk import Combobox
 import asyncio
 import queue
+import paramiko
 import os
 from dotenv import load_dotenv
 
@@ -60,10 +61,10 @@ class Control_Panel:
         self.app.title("Control Panel")
         self.app.geometry("600x500")
 
-        self.b1 = Button(self.app, text="Start GPG1", command=lambda: self.handle_button_press("GPG1"))
+        self.b1 = Button(self.app, text="Start GPG1",command=self.start_gpg1_and_ssh,)
         self.b1.grid(row=3, column=0, padx=10, pady=10)
 
-        self.b2 = Button(self.app, text="Start GPG2", command=lambda: self.handle_button_press("GPG2"))
+        self.b2 = Button(self.app, text="Start GPG2", command=self.start_gpg2_and_ssh)
         self.b2.grid(row=62, column=0, padx=10, pady=10)
         
         
@@ -71,6 +72,7 @@ class Control_Panel:
         self.button_open_map.grid(row=0, column=1, padx=10, pady=10)
         map_label = Label(self.app, text='Käynnistä Kartta', font=('Arial', 10))
         map_label.grid(row=0, column=0, padx=10, pady=5)
+
         
         self.start_node_var_1 = StringVar()
         self.start_node_var_1.trace_add("write", self.force_uppercase)
@@ -92,7 +94,65 @@ class Control_Panel:
         self.create_edge_remover_handler()
         
         self.app.bind("<Escape>", self.close_app)
-        
+
+    def ssh_start_script_on_gopigo(self, bot_ip, username, password, remote_path):
+        try:
+            print(f"[SSH] Connecting to {bot_ip}...")
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(
+                hostname=bot_ip,
+                username=username,
+                password=password
+            )
+
+            command = f"python3 {remote_path}"
+            print(f"[SSH] Running command: {command}")
+            stdin, stdout, stderr = ssh.exec_command(command)
+
+            # Optional: Print output
+            output = stdout.read().decode()
+            error = stderr.read().decode()
+
+            if output:
+                print(f"[SSH] Output:\n{output}")
+            if error:
+                print(f"[SSH] Error:\n{error}")
+
+            ssh.close()
+            print("[SSH] Connection closed.")
+
+        except Exception as e:
+            print(f"[SSH] Failed to connect or run command: {e}")
+
+    def start_gpg1_and_ssh(self):
+        threading.Thread(
+            target=self.ssh_start_script_on_gopigo,
+            args=(
+                os.getenv("GPG1_IP"),
+                os.getenv("GPG1_USER"),
+                os.getenv("GPG1_PASS"),
+                "/home/pi/GoPiGo/22222/main.py"
+            ),
+            daemon=True
+        ).start()
+
+        self.handle_button_press("GPG1")
+
+    def start_gpg2_and_ssh(self):
+        threading.Thread(
+            target=self.ssh_start_script_on_gopigo,
+            args=(
+                os.getenv("GPG2_IP"),
+                os.getenv("GPG2_USER"),
+                os.getenv("GPG2_PASS"),
+                "/home/pi/GoPiGo/22222/main.py"
+            ),
+            daemon=True
+        ).start()
+
+        self.handle_button_press("GPG2")
+
     def force_uppercase(self, *args):
         self.start_node_var_1.set(self.start_node_var_1.get().upper())
         self.end_node_var_1.set(self.end_node_var_1.get().upper())
