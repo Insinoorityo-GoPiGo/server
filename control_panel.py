@@ -159,12 +159,13 @@ class Control_Panel:
         node_in_edge_2.grid(row=66, column=0, padx=10, pady=5) 
         node_in_edge_2 = Combobox(self.app, textvariable=self.remove_edge_2, values=self.valid_inputs, width=5)
         node_in_edge_2.grid(row=66, column=1, padx=10, pady=5)
-           
-        sub_btn_3 = Button(self.app, text='Poista Edge', command=self.submit_remove_edge)
-        sub_btn_3.grid(row=66, column=2, pady=7)
+
         
-        sub_btn_4 = Button(self.app, text='Palauta edge', command=self.restore_edges)
-        sub_btn_4.grid(row=66, column=3, pady=7)
+        self.sub_btn_3 = Button(self.app, text='Poista Edge', command=self.submit_remove_edge, state="disabled")
+        self.sub_btn_3.grid(row=66, column=2, pady=7)
+        
+        self.sub_btn_4 = Button(self.app, text='Palauta edge', command=self.restore_edges, state="disable")
+        self.sub_btn_4.grid(row=66, column=3, pady=7)
         
     def submit_remove_edge(self):
         Node1 = self.remove_edge_1.get()
@@ -201,6 +202,8 @@ class Control_Panel:
         self.app.mainloop()
 
     def open_map(self):
+        self.sub_btn_3.config(state="normal")
+        self.sub_btn_4.config(state="normal")
         self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.map_quit_flag, highlighted_edge=self.highlighted_edge_for_map, highlighted_start_node_gpg_1=self.gpg_1_start_node, highlighted_start_node_gpg_2=self.gpg_2_start_node)
         self.location_map.run()
 
