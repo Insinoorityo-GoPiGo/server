@@ -237,8 +237,11 @@ class ClientAPI():
             
             self.update_location() #Markereita yks pykälä eteen päin
 
+            print("\n\n", self.client_stop_pause_event, "\n\n")
             if self.client_stop_pause_event[self.ID]["event"].is_set(): #Stop/pause client and wait for continuing
+                print(self.ID," is paused.")
                 self.client_stop_pause_event[self.ID]["event"].wait()
+                print(self.ID," continued.")
 
             if self.rerouting_check[self.ID]["event"].is_set():
                 self.rerouting_check[self.ID]["event"].clear()
