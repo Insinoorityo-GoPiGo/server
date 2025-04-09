@@ -73,10 +73,12 @@ class Control_Panel:
         map_label.grid(row=0, column=0, padx=10, pady=5)
         
         self.start_node_var_1 = StringVar()
+        self.start_node_var_1.trace_add("write", self.force_uppercase)
         self.end_node_var_1 = StringVar()
         self.end_node_var_1.trace_add("write", self.force_uppercase)
         
         self.start_node_var_2 = StringVar()
+        self.start_node_var_2.trace_add("write", self.force_uppercase)
         self.end_node_var_2 = StringVar()
         self.end_node_var_2.trace_add("write", self.force_uppercase)
         
@@ -92,7 +94,9 @@ class Control_Panel:
         self.app.bind("<Escape>", self.close_app)
         
     def force_uppercase(self, *args):
+        self.start_node_var_1.set(self.start_node_var_1.get().upper())
         self.end_node_var_1.set(self.end_node_var_1.get().upper())
+        self.start_node_var_2.set(self.start_node_var_2.get().upper())
         self.end_node_var_2.set(self.end_node_var_2.get().upper())
         self.remove_edge_1.set(self.remove_edge_1.get().upper())
         self.remove_edge_2.set(self.remove_edge_2.get().upper())
