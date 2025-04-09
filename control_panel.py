@@ -214,7 +214,7 @@ class Control_Panel:
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
-    def remove_edge(self, target_edge: tuple): 
+    def remove_edge(self, target_edge: tuple):
         #Pysäytetään socketin toiminta
         
         #for socket in self.socket_logic_execution_pause:
