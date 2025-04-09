@@ -268,12 +268,12 @@ class Control_Panel:
         self.sub_btn_6.grid(row=70, column=2, pady=7)
      
     def pause_gpg(self):
-        self.socket_logic_execution_pause["gopigo_1"]["event"].set()
-        self.socket_logic_execution_pause["gopigo_2"]["event"].set()
-        
-    def continue_gpg(self):
         self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
         self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
+        
+    def continue_gpg(self):
+        self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+        self.socket_logic_execution_pause["gopigo_2"]["event"].set()
            
        
     def submit_gpg1(self):
