@@ -39,8 +39,6 @@ class ClientAPI():
         self.new_route_for_returning_due_to_reroute: bool = False
 
         #server stuff
-        self.quit_flag = quit_flag
-
         self.HOST = host
         self.PORT = port
 
@@ -166,18 +164,6 @@ class ClientAPI():
     def handle_shutdown_command(self):
         self.close_connection()
 
-    def check_command_queue(self):
-        if self.command_queue.qsize() > 0:
-
-            command = self.command_queue.get(block=True)
-            
-            if command["id"] == self.ID:
-                match command["command"]:
-                    case "shut_down":
-                        self.handle_shutdown_command()
-            else:
-                self.command_queue.put(command)
-
     def logic(self):
         self.state = "STARTED"
         
@@ -199,7 +185,6 @@ class ClientAPI():
                 confirmation = self.receive_message_from_client()
                 self.confirm(expected="TURN_OK", confirmation=confirmation)
 
-                self.quit_flag.set()
                 self.close_connection()
 
     def logic_loop(self):
@@ -335,3 +320,25 @@ class ClientAPI():
         self.client_socket.close()
         self.server_socket.close()
         print("Server closed.")
+
+
+
+
+
+
+
+
+
+
+#Unused as of now
+    def check_command_queue(self):
+        if self.command_queue.qsize() > 0:
+
+            command = self.command_queue.get(block=True)
+            
+            if command["id"] == self.ID:
+                match command["command"]:
+                    case "shut_down":
+                        self.handle_shutdown_command()
+            else:
+                self.command_queue.put(command)

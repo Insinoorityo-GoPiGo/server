@@ -15,7 +15,7 @@ from get_coordinates_and_edges import get_coordinates_and_edges
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self, command_queue, map_quit_flag, client_quit_flag):
+    def __init__(self, command_queue, map_quit_flag):
         
         self.rerouting_check = {
             "gopigo_1": {
@@ -37,7 +37,6 @@ class Control_Panel:
 
         self.command_queue = command_queue
         self.map_quit_flag = map_quit_flag
-        self.client_quit_flag = client_quit_flag
 
         self.location_queue_1 = queue.Queue()
         self.location_queue_2 = queue.Queue()
@@ -84,6 +83,8 @@ class Control_Panel:
         map_label = Label(self.app, text='Käynnistä Kartta', font=('Arial', 10))
         map_label.grid(row=0, column=0, padx=10, pady=5)
 
+        self.gpg_pause_selection = StringVar()
+        self.gpg_continue_selection = StringVar()
         
         self.start_node_var_1 = StringVar()
         self.start_node_var_1.trace_add("write", self.force_uppercase)
@@ -254,7 +255,7 @@ class Control_Panel:
         
         Pause_GPG = Label(self.app, text='Pasue selected GPG', font=('Arial', 10))
         Pause_GPG.grid(row=69, column=0, padx=10, pady=5) 
-        Pause_GPG = Combobox(self.app, values=self.options_gpg, width=5)
+        Pause_GPG = Combobox(self.app, values=self.options_gpg, width=5, textvariable=self.gpg_pause_selection)
         Pause_GPG.grid(row=69, column=1, padx=10, pady=5)
         self.sub_btn_5 = Button(self.app, text='Pause', command=self.pause_gpg)
         self.sub_btn_5.grid(row=69, column=2, pady=7)
@@ -262,19 +263,34 @@ class Control_Panel:
         
         Continue_GPG = Label(self.app, text='Continue GPG', font=('Arial', 10))
         Continue_GPG.grid(row=70, column=0, padx=10, pady=5) 
-        Continue_GPG = Combobox(self.app, values=self.options_gpg, width=5)
+        Continue_GPG = Combobox(self.app, values=self.options_gpg, width=5, textvariable=self.gpg_continue_selection)
         Continue_GPG.grid(row=70, column=1, padx=10, pady=5)
         self.sub_btn_6 = Button(self.app, text='Continue', command=self.continue_gpg )
         self.sub_btn_6.grid(row=70, column=2, pady=7)
      
     def pause_gpg(self):
-        self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
-        self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
+        match self.gpg_pause_selection:
+            case "GoPiGo 1":
+                self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
+            case "GoPiGo 2":
+                self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
+            case "Molemmat":
+                self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
+                self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
+            case "":
+                print("In pause_gpg, no command was given.")
         
     def continue_gpg(self):
-        self.socket_logic_execution_pause["gopigo_1"]["event"].set()
-        self.socket_logic_execution_pause["gopigo_2"]["event"].set()
-           
+        match self.gpg_continue_selection:
+            case "GoPiGo 1":
+                self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+            case "GoPiGo 2":
+                self.socket_logic_execution_pause["gopigo_2"]["event"].set()
+            case "Molemmat":
+                self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+                self.socket_logic_execution_pause["gopigo_2"]["event"].set()
+            case "":
+                print("In continue_gpg, no command was given.")
        
     def submit_gpg1(self):
         Aloitus1 = self.start_node_var_1.get()
@@ -320,7 +336,7 @@ class Control_Panel:
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
         
-        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, quit_flag=self.client_quit_flag, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, rerouting_check=self.rerouting_check, stop_pause_event=self.socket_logic_execution_pause)
+        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, rerouting_check=self.rerouting_check, stop_pause_event=self.socket_logic_execution_pause)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
