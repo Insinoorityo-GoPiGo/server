@@ -86,7 +86,9 @@ class Control_Panel:
         map_label.grid(row=0, column=0, padx=10, pady=5)
 
         self.gpg_pause_selection = StringVar()
+        print("in control panel init, pause selection: ",self.gpg_pause_selection)
         self.gpg_continue_selection = StringVar()
+        print("in control panel init, continue selection: ",self.gpg_continue_selection)
         
         self.start_node_var_1 = StringVar()
         self.start_node_var_1.trace_add("write", self.force_uppercase)
@@ -271,22 +273,28 @@ class Control_Panel:
         self.sub_btn_6.grid(row=70, column=2, pady=7)
      
     def pause_gpg(self):
-        print("pause selection: ",self.gpg_pause_selection)
-        if self.gpg_pause_selection == "GoPiGo 1":
+        print("pause selection: ",self.gpg_pause_selection.get())
+
+        if self.gpg_pause_selection.get() == "GoPiGo 1":
             self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
-        elif self.gpg_pause_selection == "GoPiGo 2":
+
+        elif self.gpg_pause_selection.get() == "GoPiGo 2":
             self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
-        elif self.gpg_pause_selection == "Molemmat":
+            
+        elif self.gpg_pause_selection.get() == "Both":
             self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
             self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
         
     def continue_gpg(self):
-        print("continue selection: ",self.gpg_continue_selection)
-        if self.gpg_continue_selection == "GoPiGo 1":
+        print("continue selection: ",self.gpg_continue_selection.get())
+
+        if self.gpg_continue_selection.get() == "GoPiGo 1":
             self.socket_logic_execution_pause["gopigo_1"]["event"].set()
-        elif self.gpg_continue_selection == "GoPiGo 2":
+
+        elif self.gpg_continue_selection.get() == "GoPiGo 2":
             self.socket_logic_execution_pause["gopigo_2"]["event"].set()
-        elif self.gpg_continue_selection == "Molemmat":
+
+        elif self.gpg_continue_selection.get() == "Both":
             self.socket_logic_execution_pause["gopigo_1"]["event"].set()
             self.socket_logic_execution_pause["gopigo_2"]["event"].set()
        
