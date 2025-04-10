@@ -8,13 +8,12 @@ from PathFinding import PathFinding
 from get_coordinates_and_edges import get_coordinates_and_edges
 
 class ClientAPI():
-    def __init__(self, host, port, path, quit_flag, location_queue, command_queue, rerouting_check, stop_pause_event, default_direction="east", bot_id="gopigo_1"):     
+    def __init__(self, host, port, path, quit_flag, location_queue, rerouting_check, stop_pause_event, default_direction="east", bot_id="gopigo_1"):     
         #Client control stuff
         self.rerouting_check: dict[str,dict[str,threading.Event]] = rerouting_check
         self.client_stop_pause_event: dict[str,dict[str,threading.Event]] = stop_pause_event
 
         self.location_queue = location_queue
-        self.command_queue = command_queue
 
         self.ID = bot_id
 
@@ -320,25 +319,3 @@ class ClientAPI():
         self.client_socket.close()
         self.server_socket.close()
         print("Server closed.")
-
-
-
-
-
-
-
-
-
-
-#Unused as of now
-    def check_command_queue(self):
-        if self.command_queue.qsize() > 0:
-
-            command = self.command_queue.get(block=True)
-            
-            if command["id"] == self.ID:
-                match command["command"]:
-                    case "shut_down":
-                        self.handle_shutdown_command()
-            else:
-                self.command_queue.put(command)

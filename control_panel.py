@@ -15,7 +15,7 @@ from get_coordinates_and_edges import get_coordinates_and_edges
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self, command_queue, map_quit_flag):
+    def __init__(self, map_quit_flag):
         
         self.rerouting_check = {
             "gopigo_1": {
@@ -35,7 +35,6 @@ class Control_Panel:
             },
         }
 
-        self.command_queue = command_queue
         self.map_quit_flag = map_quit_flag
 
         self.location_queue_1 = queue.Queue()
@@ -336,7 +335,7 @@ class Control_Panel:
     def open_and_run_socket(self, port, the_id):
         location_queue = self.location_queue_1 if the_id == "gopigo_1" else self.location_queue_2
         
-        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, command_queue=self.command_queue, location_queue=location_queue, default_direction="east", bot_id=the_id, rerouting_check=self.rerouting_check, stop_pause_event=self.socket_logic_execution_pause)
+        client_api = ClientAPI(host=os.getenv("IP_ADDRESS"), port=port, path=self.path, location_queue=location_queue, default_direction="east", bot_id=the_id, rerouting_check=self.rerouting_check, stop_pause_event=self.socket_logic_execution_pause)
         run_server = lambda client_api: asyncio.run(client_api.open_connection())
         (threading.Thread(target=run_server, args=(client_api,), daemon=True)).start()
 
@@ -405,9 +404,4 @@ class Control_Panel:
                 self.b2.config(bg="green")        
         
         else:
-            self.command_queue.put(
-                {
-                    "id": self.chosen_client_id,
-                    "command": command
-                }
-            )
+            print("In handle_button_press, no command was given.")
