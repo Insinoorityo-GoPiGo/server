@@ -35,6 +35,9 @@ class Control_Panel:
             },
         }
 
+        self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+        self.socket_logic_execution_pause["gopigo_2"]["event"].set()
+
         self.map_quit_flag = threading.Event() #When control panel is closed, map also closes.
 
         self.location_queue_1 = queue.Queue()

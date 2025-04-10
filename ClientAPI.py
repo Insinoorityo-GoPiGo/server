@@ -223,7 +223,7 @@ class ClientAPI():
 
             print("Location markers have been updated.")
 
-            self.client_stop_pause_event[self.ID]["event"].wait()
+            self.client_stop_pause_event[self.ID]["event"].wait() #if is set, this doesn't wait
             print("After client_stop_pause_event wait")
             
 
