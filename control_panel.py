@@ -247,6 +247,7 @@ class Control_Panel:
         self.sub_btn_4.grid(row=66, column=3, pady=7)
         
     def submit_remove_edge(self):
+        print("In submit_remove_edge")
         Node1 = self.remove_edge_1.get()
         Node2 = self.remove_edge_2.get()
         self.remove_edge(target_edge=(Node1,Node2))
@@ -342,9 +343,13 @@ class Control_Panel:
 
     def remove_edge(self, target_edge: tuple):
         #Pysäytetään socketin toiminta
+        print("remove_edge alussa")
         
-        #for socket in self.rerouting_check:
-        #    socket["event"].set()
+        for key in self.rerouting_check:
+            print("key: ",key)
+            self.rerouting_check[key]["event"].set()
+            print("Is set")
+            
 
         #Poistetaan edge
         node_1, node_2 = target_edge
