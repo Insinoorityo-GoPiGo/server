@@ -226,14 +226,21 @@ class ClientAPI():
             if self.rerouting_check[self.ID]["event"].is_set():
                 print("rerouting_check is set")
                 self.rerouting_check[self.ID]["event"].clear()
+
+                break_from_logic_loop = False
                 
                 for i in range(len(self.path) - 1):
                     edge = (self.path[i], self.path[i + 1])
                     reversed_edge = (self.path[i + 1], self.path[i])
                     if edge in PathFinding.removed_edges or reversed_edge in PathFinding.removed_edges:
+
+                        break_from_logic_loop = True
+
                         print("Removed edge found in path:", edge)
                         self.state = "REROUTED_FROM_CURRENT_TO_DESTINATION"
                         break
+                if break_from_logic_loop == True:
+                    break
 
             self.client_stop_pause_event[self.ID]["event"].wait() #if is set, this doesn't wait
             print("After client_stop_pause_event wait")
@@ -244,16 +251,14 @@ class ClientAPI():
             self.state = "RETURNED_HOME"
 
     def reroute_from_current_to_end(self):
-        coordinates, _ = get_coordinates_and_edges()
-        self.path = PathFinding(coordinates=coordinates).get_shortest_path(start=self.current_node, end=self.path[-1])
+        self.path = PathFinding().get_shortest_path(start=self.current_node["node"], end=self.path[-1])
         self.reset_node_markers()
 
     def reverse_path(self):
         self.path = list(reversed(self.path))
 
     def reroute_back_home(self):
-        coordinates, _ = get_coordinates_and_edges()
-        self.path = PathFinding(coordinates=coordinates).get_shortest_path(start=self.current_node, end=self.home_node)
+        self.path = PathFinding().get_shortest_path(start=self.current_node["node"], end=self.home_node)
 
     def reset_node_markers(self):
         self.current_node_marker = 0
