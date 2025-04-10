@@ -271,6 +271,7 @@ class Control_Panel:
         self.sub_btn_6.grid(row=70, column=2, pady=7)
      
     def pause_gpg(self):
+        print("pause selection: ",self.gpg_pause_selection)
         if self.gpg_pause_selection == "GoPiGo 1":
             self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
         elif self.gpg_pause_selection == "GoPiGo 2":
@@ -280,6 +281,7 @@ class Control_Panel:
             self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
         
     def continue_gpg(self):
+        print("continue selection: ",self.gpg_continue_selection)
         if self.gpg_continue_selection == "GoPiGo 1":
             self.socket_logic_execution_pause["gopigo_1"]["event"].set()
         elif self.gpg_continue_selection == "GoPiGo 2":
