@@ -221,7 +221,7 @@ class ClientAPI():
             
             self.update_location() #Markereita yks pykälä eteen päin
 
-            print("Location markers have been updarted.")
+            print("Location markers have been updated.")
 
             self.client_stop_pause_event[self.ID]["event"].wait()
             print("After client_stop_pause_event wait")

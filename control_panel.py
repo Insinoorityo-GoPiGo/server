@@ -268,28 +268,22 @@ class Control_Panel:
         self.sub_btn_6.grid(row=70, column=2, pady=7)
      
     def pause_gpg(self):
-        match self.gpg_pause_selection:
-            case "GoPiGo 1":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
-            case "GoPiGo 2":
-                self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
-            case "Molemmat":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
-                self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
-            case "":
-                print("In pause_gpg, no command was given.")
+        if self.gpg_pause_selection == "GoPiGo 1":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
+        elif self.gpg_pause_selection == "GoPiGo 2":
+            self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
+        elif self.gpg_pause_selection == "Molemmat":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
+            self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
         
     def continue_gpg(self):
-        match self.gpg_continue_selection:
-            case "GoPiGo 1":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].set()
-            case "GoPiGo 2":
-                self.socket_logic_execution_pause["gopigo_2"]["event"].set()
-            case "Molemmat":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].set()
-                self.socket_logic_execution_pause["gopigo_2"]["event"].set()
-            case "":
-                print("In continue_gpg, no command was given.")
+        if self.gpg_continue_selection == "GoPiGo 1":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+        elif self.gpg_continue_selection == "GoPiGo 2":
+            self.socket_logic_execution_pause["gopigo_2"]["event"].set()
+        elif self.gpg_continue_selection == "Molemmat":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+            self.socket_logic_execution_pause["gopigo_2"]["event"].set()
        
     def submit_gpg1(self):
         Aloitus1 = self.start_node_var_1.get()
