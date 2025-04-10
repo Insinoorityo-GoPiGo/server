@@ -160,9 +160,6 @@ class ClientAPI():
         print("Sending location to map: ", self.current_node)
         self.location_queue.put(self.current_node, block=True) #Laittaa dictionaryn
 
-    def handle_shutdown_command(self):
-        self.close_connection()
-
     def logic(self):
         self.state = "STARTED"
         
