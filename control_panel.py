@@ -54,7 +54,7 @@ class Control_Panel:
             "G5", "G6", "G7", "G8", "G9", "G10"
         ]
         
-        self.options_gpg = ["GoPiGo 1", "GoPiGo 2", "Molemmat"]
+        self.options_gpg = ["GoPiGo 1", "GoPiGo 2", "Both"]
 
         self.path: None|list = None
         self.location_map: None|Map = None
@@ -79,7 +79,7 @@ class Control_Panel:
         
         self.button_open_map = Button(self.app, text="Open map", command=lambda: self.handle_button_press("open_map"))
         self.button_open_map.grid(row=0, column=1, padx=10, pady=10)
-        map_label = Label(self.app, text='Käynnistä Kartta', font=('Arial', 10))
+        map_label = Label(self.app, text='Start Map', font=('Arial', 10))
         map_label.grid(row=0, column=0, padx=10, pady=5)
 
         self.gpg_pause_selection = StringVar()
@@ -180,22 +180,22 @@ class Control_Panel:
         self.app.destroy() #Close the control panel window
      
     def create_node_fields_gpg1(self):
-        GPG1_label = Label(self.app, text="GoPiGo 1 Ohjaus", font=('Arial', 10, 'bold'))
+        GPG1_label = Label(self.app, text="GoPiGo 1 Control", font=('Arial', 10, 'bold'))
         GPG1_label.grid(row=2, column=0, padx=10, pady=5)
         
-        aloitus_label_1 = Label(self.app, text='Aloitus 1', font=('Arial', 10))
+        aloitus_label_1 = Label(self.app, text='Start 1', font=('Arial', 10))
         aloitus_label_1.grid(row=3, column=1, padx=10, pady=5)
         
         aloitus_syöttö_1 = Combobox(self.app, textvariable=self.start_node_var_1, values=self.valid_inputs, width=5)
         aloitus_syöttö_1.grid(row=3, column=2, padx=10, pady=5)
 
-        lopetus_label_1 = Label(self.app, text='Lopetus 1', font=('Arial', 10))
+        lopetus_label_1 = Label(self.app, text='End 1', font=('Arial', 10))
         lopetus_label_1.grid(row=4, column=1, padx=10, pady=5)
         
         lopetus_syöttö_1 = Combobox(self.app, textvariable=self.end_node_var_1, values=self.valid_inputs, width=5)
         lopetus_syöttö_1.grid(row=4, column=2, padx=10, pady=5)
 
-        sub_btn_1 = Button(self.app, text='Hae Reitti', command=self.submit_gpg1)
+        sub_btn_1 = Button(self.app, text='Get Path', command=self.submit_gpg1)
         sub_btn_1.grid(row=4, column=3, pady=7)
   
         self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
@@ -204,22 +204,22 @@ class Control_Panel:
         self.separator1.grid(row=5, column=0, columnspan=14, padx=10, pady=10, sticky="ew")
         
     def create_node_fields_gpg2(self):
-        GPG2_label = Label(self.app, text="GoPiGo 2 Ohjaus", font=('Arial', 10, 'bold'))
+        GPG2_label = Label(self.app, text="GoPiGo 2 Control", font=('Arial', 10, 'bold'))
         GPG2_label.grid(row=61, column=0, padx=10, pady=5)
         
-        aloitus_label_2 = Label(self.app, text='Aloitus 2', font=('Arial', 10))
+        aloitus_label_2 = Label(self.app, text='Start 2', font=('Arial', 10))
         aloitus_label_2.grid(row=62, column=1, padx=10, pady=5)
         
         aloitus_syöttö_2 = Combobox(self.app, textvariable=self.start_node_var_2, values=self.valid_inputs, width=5)
         aloitus_syöttö_2.grid(row=62, column=2, padx=10, pady=5)
 
-        lopetus_label_2 = Label(self.app, text='Lopetus 2', font=('Arial', 10))
+        lopetus_label_2 = Label(self.app, text='End 2', font=('Arial', 10))
         lopetus_label_2.grid(row=63, column=1, padx=10, pady=5)
         
         lopetus_syöttö_2 = Combobox(self.app, textvariable=self.end_node_var_2, values=self.valid_inputs, width=5)
         lopetus_syöttö_2.grid(row=63, column=2, padx=10, pady=5)
 
-        sub_btn_2 = Button(self.app, text='Hae Reitti', command=self.submit_gpg2)
+        sub_btn_2 = Button(self.app, text='Get Path', command=self.submit_gpg2)
         sub_btn_2.grid(row=63, column=3, pady=7)
         
         self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
@@ -237,10 +237,10 @@ class Control_Panel:
         node_in_edge_2.grid(row=66, column=1, padx=10, pady=5)
 
         
-        self.sub_btn_3 = Button(self.app, text='Poista Edge', command=self.submit_remove_edge, state="disabled")
+        self.sub_btn_3 = Button(self.app, text='Remove Edge', command=self.submit_remove_edge, state="disabled")
         self.sub_btn_3.grid(row=66, column=2, pady=7)
         
-        self.sub_btn_4 = Button(self.app, text='Palauta edge', command=self.restore_edges, state="disable")
+        self.sub_btn_4 = Button(self.app, text='Restore edge', command=self.restore_edges, state="disable")
         self.sub_btn_4.grid(row=66, column=3, pady=7)
         
     def submit_remove_edge(self):
@@ -252,9 +252,9 @@ class Control_Panel:
         self.separator = Frame(self.app, height=2, bd=1, relief=SUNKEN, bg="black")
         self.separator.grid(row=68, column=0, columnspan=14, padx=10, pady=10, sticky="ew")
         
-        Pause_GPG = Label(self.app, text='Pasue selected GPG', font=('Arial', 10))
+        Pause_GPG = Label(self.app, text='Pause selected GPG', font=('Arial', 10))
         Pause_GPG.grid(row=69, column=0, padx=10, pady=5) 
-        Pause_GPG = Combobox(self.app, values=self.options_gpg, width=5, textvariable=self.gpg_pause_selection)
+        Pause_GPG = Combobox(self.app, values=self.options_gpg, width=5, textvariable=self.gpg_pause_selection, state="readonly")
         Pause_GPG.grid(row=69, column=1, padx=10, pady=5)
         self.sub_btn_5 = Button(self.app, text='Pause', command=self.pause_gpg)
         self.sub_btn_5.grid(row=69, column=2, pady=7)
@@ -262,7 +262,7 @@ class Control_Panel:
         
         Continue_GPG = Label(self.app, text='Continue GPG', font=('Arial', 10))
         Continue_GPG.grid(row=70, column=0, padx=10, pady=5) 
-        Continue_GPG = Combobox(self.app, values=self.options_gpg, width=5, textvariable=self.gpg_continue_selection)
+        Continue_GPG = Combobox(self.app, values=self.options_gpg, width=5, textvariable=self.gpg_continue_selection, state="readonly")
         Continue_GPG.grid(row=70, column=1, padx=10, pady=5)
         self.sub_btn_6 = Button(self.app, text='Continue', command=self.continue_gpg )
         self.sub_btn_6.grid(row=70, column=2, pady=7)
@@ -294,8 +294,8 @@ class Control_Panel:
         if self.location_map is not None:
             self.location_map.highlight_node_gpg_1 = self.gpg_1_start_node
 
-        print(f"Aloitus Node GPG1: {Aloitus1}")
-        print(f"Lopetus Node GPG1: {Lopetus1}")
+        print(f"Start Node GPG1: {Aloitus1}")
+        print(f"End Node GPG1: {Lopetus1}")
         
         self.path = PathFinding().get_shortest_path(start=Aloitus1, end=Lopetus1)
 
@@ -310,8 +310,8 @@ class Control_Panel:
         if self.location_map is not None:
             self.location_map.highlight_node_gpg_2 = self.gpg_2_start_node
 
-        print(f"Aloitus Node GPG2: {Aloitus2}")
-        print(f"Lopetus Node GPG2: {Lopetus2}")
+        print(f"Start Node GPG2: {Aloitus2}")
+        print(f"Node Node GPG2: {Lopetus2}")
 
         self.path = PathFinding().get_shortest_path(start=Aloitus2, end=Lopetus2)
         
