@@ -15,7 +15,7 @@ from get_coordinates_and_edges import get_coordinates_and_edges
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self, map_quit_flag):
+    def __init__(self):
         
         self.rerouting_check = {
             "gopigo_1": {
@@ -35,7 +35,7 @@ class Control_Panel:
             },
         }
 
-        self.map_quit_flag = map_quit_flag
+        self.map_quit_flag = threading.Event() #When control panel is closed, map also closes.
 
         self.location_queue_1 = queue.Queue()
         self.location_queue_2 = queue.Queue()
