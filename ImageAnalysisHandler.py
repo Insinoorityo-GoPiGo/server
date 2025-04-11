@@ -8,9 +8,11 @@ from OpenaiAPI import OpenaiAPI
 load_dotenv()
 
 class ImageAnalysisHander:
-    def __init__(self):
+    def __init__(self, obstacle_description_queue):
         self.image_receiver_socket = ImageReceiverSocket(host=os.environ.get("IP_ADDRESS"), port=1100)
         self.openai_api = OpenaiAPI(api_key=os.environ.get("API_KEY"))
+
+        self.obstacle_description_queue = obstacle_description_queue
 
     def start(self):
         self.image_receiver_socket.open_connection()

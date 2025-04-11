@@ -15,7 +15,9 @@ from get_coordinates_and_edges import get_coordinates_and_edges
 load_dotenv()
 
 class Control_Panel:
-    def __init__(self):
+    def __init__(self, obstacle_description_queue):
+
+        self.obstacle_description_queue = obstacle_description_queue
         
         self.rerouting_check = {
             "gopigo_1": {
