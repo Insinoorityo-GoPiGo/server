@@ -104,6 +104,9 @@ class Control_Panel:
         self.remove_edge_1.trace_add("write", self.force_uppercase)
         self.remove_edge_2 = StringVar()
         self.remove_edge_2.trace_add("write", self.force_uppercase)
+
+        self.obstacle_description_stringvar = StringVar()
+        self.GPG_detection_analysis = None
         
         self.create_node_fields_gpg1()
         self.create_node_fields_gpg2()
@@ -275,11 +278,10 @@ class Control_Panel:
         self.sub_btn_6.grid(row=70, column=2, pady=7)
         
     def image_analysis_field(self):
-        GPG_detection_analysis = Label(self.app, text='AI analysis from picture taken by GoPiGo', font=('Arial', 10))
-        GPG_detection_analysis.grid(row=0, column=3, padx=10, pady=5)
-        GPG_detection_analysis = Text(self.app, height=3, width=20, font=('Arial', 10), state="disabled")
-        GPG_detection_analysis.grid(row=0, column=4, padx=10, pady=5)
-    
+        self.GPG_detection_analysis = Label(self.app, text='AI analysis from picture taken by GoPiGo', font=('Arial', 10)) #
+        self.GPG_detection_analysis.grid(row=0, column=3, padx=10, pady=5)
+        self.GPG_detection_analysis = Text(self.app, height=3, width=20, font=('Arial', 10), state="normal")
+        self.GPG_detection_analysis.grid(row=0, column=4, padx=10, pady=5)
      
     def pause_gpg(self):
         if self.gpg_pause_selection.get() == "GoPiGo 1":
@@ -341,7 +343,16 @@ class Control_Panel:
     def open_map(self):
         self.sub_btn_3.config(state="normal")
         self.sub_btn_4.config(state="normal")
-        self.location_map = Map(location_queue_1=self.location_queue_1, location_queue_2=self.location_queue_2, quit_flag=self.map_quit_flag, highlighted_edge=self.highlighted_edge_for_map, highlighted_start_node_gpg_1=self.gpg_1_start_node, highlighted_start_node_gpg_2=self.gpg_2_start_node)
+        self.location_map = Map(
+            location_queue_1=self.location_queue_1,
+            location_queue_2=self.location_queue_2,
+            quit_flag=self.map_quit_flag,
+            highlighted_edge=self.highlighted_edge_for_map,
+            highlighted_start_node_gpg_1=self.gpg_1_start_node,
+            highlighted_start_node_gpg_2=self.gpg_2_start_node, 
+            obstacle_description_stringvar=self.obstacle_description_stringvar,
+            obstacle_description_queue=self.obstacle_description_queue
+        )
         self.location_map.run()
 
     def open_and_run_socket(self, port, the_id):

@@ -2,11 +2,18 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from queue import Empty
 import copy
+from tkinter import END
+
+#import tkinter
+#tkinter.StringVar().
 
 from get_coordinates_and_edges import get_coordinates_and_edges
 
 class Map:
-    def __init__(self, quit_flag, location_queue_1, location_queue_2, highlighted_edge, highlighted_start_node_gpg_1, highlighted_start_node_gpg_2):
+    def __init__(self, quit_flag, location_queue_1, location_queue_2, highlighted_edge, highlighted_start_node_gpg_1, highlighted_start_node_gpg_2, obstacle_description_stringvar, obstacle_description_queue):
+        self.obstacle_description_stringvar = obstacle_description_stringvar
+        self.obstacle_description_queue = obstacle_description_queue
+        
         self.quit_flag = quit_flag
 
         self.location_queue_1 = location_queue_1
@@ -85,6 +92,15 @@ class Map:
         print("map started")
         try:
             while plt.fignum_exists(self.fig.number) and not self.quit_flag.is_set():
+
+                #Setting the obstacle description
+                try:
+                    obstacle_description = self.obstacle_description_queue.get(block=False) 
+                except Empty:
+                    pass
+                else:
+                    self.obstacle_description_stringvar.set(obstacle_description)
+                
                 client_locations = (
                     location 
                     for location 

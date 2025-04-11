@@ -22,4 +22,4 @@ class ImageAnalysisHander:
         while True:
             image_as_bytes = self.image_receiver_socket.receive_image()
             description = self.openai_api.get_response(image_data=image_as_bytes) #description of the object
-            #Here send the description to a queue
+            self.obstacle_description_queue.put(description)
