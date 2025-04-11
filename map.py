@@ -100,6 +100,9 @@ class Map:
                     pass
                 else:
                     self.obstacle_description_stringvar.set(obstacle_description)
+                finally:
+                    print("In finally")
+                    self.obstacle_description_stringvar.set("testing")
                 
                 client_locations = (
                     location 
