@@ -14,8 +14,6 @@ class ImageAnalysisHander:
 
     def start(self):
         self.image_receiver_socket.open_connection()
-
-    def logic(self):             
         threading.Thread(target=self.logic_loop, daemon=True).start()
         
     def logic_loop(self):
