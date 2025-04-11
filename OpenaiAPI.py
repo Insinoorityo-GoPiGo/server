@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class OpenaiClient:
-    def __init__(self):
+class OpenaiAPI:
+    def __init__(self, api_key):
         self.openai = OpenAI(
-            api_key=os.environ.get("API_KEY") #API_KEY variable in .env
+            api_key=api_key #API_KEY variable in .env
         )
 
     def prompt_openai(self, image_data) -> str:
