@@ -18,7 +18,7 @@ class PathFinding:
 
         return graph
     
-    def get_shortest_path(self, start: Union[str,None], end: Union[str,None]) -> list:
+    def get_shortest_path(self, start: str|None, end: str|None) -> list:
         
         if start == None:
             start = input("Enter the start node: ")

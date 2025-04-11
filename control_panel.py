@@ -35,6 +35,9 @@ class Control_Panel:
             },
         }
 
+        self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+        self.socket_logic_execution_pause["gopigo_2"]["event"].set()
+
         self.map_quit_flag = threading.Event() #When control panel is closed, map also closes.
 
         self.location_queue_1 = queue.Queue()
@@ -245,6 +248,7 @@ class Control_Panel:
         self.sub_btn_4.grid(row=66, column=3, pady=7)
         
     def submit_remove_edge(self):
+        print("In submit_remove_edge")
         Node1 = self.remove_edge_1.get()
         Node2 = self.remove_edge_2.get()
         self.remove_edge(target_edge=(Node1,Node2))
@@ -276,28 +280,26 @@ class Control_Panel:
     
      
     def pause_gpg(self):
-        match self.gpg_pause_selection:
-            case "GoPiGo 1":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
-            case "GoPiGo 2":
-                self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
-            case "Both":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
-                self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
-            case "":
-                print("In pause_gpg, no command was given.")
+        if self.gpg_pause_selection.get() == "GoPiGo 1":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
+
+        elif self.gpg_pause_selection.get() == "GoPiGo 2":
+            self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
+
+        elif self.gpg_pause_selection.get() == "Both":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].clear()
+            self.socket_logic_execution_pause["gopigo_2"]["event"].clear()
         
     def continue_gpg(self):
-        match self.gpg_continue_selection:
-            case "GoPiGo 1":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].set()
-            case "GoPiGo 2":
-                self.socket_logic_execution_pause["gopigo_2"]["event"].set()
-            case "Both":
-                self.socket_logic_execution_pause["gopigo_1"]["event"].set()
-                self.socket_logic_execution_pause["gopigo_2"]["event"].set()
-            case "":
-                print("In continue_gpg, no command was given.")
+        if self.gpg_continue_selection.get() == "GoPiGo 1":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+
+        elif self.gpg_continue_selection.get() == "GoPiGo 2":
+            self.socket_logic_execution_pause["gopigo_2"]["event"].set()
+
+        elif self.gpg_continue_selection.get() == "Both":
+            self.socket_logic_execution_pause["gopigo_1"]["event"].set()
+            self.socket_logic_execution_pause["gopigo_2"]["event"].set()
        
     def submit_gpg1(self):
         Aloitus1 = self.start_node_var_1.get()
@@ -349,9 +351,13 @@ class Control_Panel:
 
     def remove_edge(self, target_edge: tuple):
         #Pysäytetään socketin toiminta
+        print("remove_edge alussa")
         
-        #for socket in self.rerouting_check:
-        #    socket["event"].set()
+        for key in self.rerouting_check:
+            print("key: ",key)
+            self.rerouting_check[key]["event"].set()
+            print("Is set")
+            
 
         #Poistetaan edge
         node_1, node_2 = target_edge
