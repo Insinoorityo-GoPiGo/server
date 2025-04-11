@@ -105,7 +105,6 @@ class Control_Panel:
         self.remove_edge_2 = StringVar()
         self.remove_edge_2.trace_add("write", self.force_uppercase)
 
-        self.obstacle_description_stringvar = StringVar()
         self.GPG_detection_analysis = None
         
         self.create_node_fields_gpg1()
@@ -350,7 +349,7 @@ class Control_Panel:
             highlighted_edge=self.highlighted_edge_for_map,
             highlighted_start_node_gpg_1=self.gpg_1_start_node,
             highlighted_start_node_gpg_2=self.gpg_2_start_node, 
-            obstacle_description_stringvar=self.obstacle_description_stringvar,
+            GPG_detection_analysis = self.GPG_detection_analysis,
             obstacle_description_queue=self.obstacle_description_queue
         )
         self.location_map.run()

@@ -10,10 +10,11 @@ from tkinter import END
 from get_coordinates_and_edges import get_coordinates_and_edges
 
 class Map:
-    def __init__(self, quit_flag, location_queue_1, location_queue_2, highlighted_edge, highlighted_start_node_gpg_1, highlighted_start_node_gpg_2, obstacle_description_stringvar, obstacle_description_queue):
-        self.obstacle_description_stringvar = obstacle_description_stringvar
-        self.obstacle_description_queue = obstacle_description_queue
+    def __init__(self, quit_flag, location_queue_1, location_queue_2, highlighted_edge, highlighted_start_node_gpg_1, highlighted_start_node_gpg_2, GPG_detection_analysis, obstacle_description_queue):
         
+        self.obstacle_description_queue = obstacle_description_queue
+        self.GPG_detection_analysis = GPG_detection_analysis
+
         self.quit_flag = quit_flag
 
         self.location_queue_1 = location_queue_1
@@ -99,10 +100,13 @@ class Map:
                 except Empty:
                     pass
                 else:
-                    self.obstacle_description_stringvar.set(obstacle_description)
+                    self.GPG_detection_analysis.insert(index="1.0",chars=obstacle_description)
                 finally:
                     print("In finally")
-                    self.obstacle_description_stringvar.set("testing")
+                    self.GPG_detection_analysis.insert(index="1.0",chars="testing")
+
+                    #import tkinter
+                    #tkinter.Text().insert()
                 
                 client_locations = (
                     location 
