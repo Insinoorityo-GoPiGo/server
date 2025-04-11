@@ -5,6 +5,8 @@ from PathFinding import PathFinding
 
 
 def main():
+    #Openai ja kuvankäsittely -threadin käynnistys
+
     PathFinding.COORDINATES, PathFinding.EDGES = get_coordinates_and_edges()
 
     Control_Panel().open_control_panel()
