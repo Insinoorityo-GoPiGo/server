@@ -21,7 +21,9 @@ class ImageReceiverSocket:
     def receive_image(self) -> bytes:
         #Receive 4 bytes indicating the size of the image
         data_len_bytes = self.client_socket.recv(4)
-        print("Image length received.")
+
+        print("Image length received, data_len_bytes: ",data_len_bytes)
+
         try:
             if len(data_len_bytes) < 4:
                 raise ConnectionError("Failed to receive image length.")
@@ -37,8 +39,15 @@ class ImageReceiverSocket:
                 if not packet:
                     raise ConnectionError("Image data incomplete.")
                 image_data += packet
-        except:
+        except ConnectionError("Failed to receive image length.") as e:
+            print("Error in receive_image: ",e)
             return None
+        except ConnectionError("Image data incomplete.") as e:
+            print("Error in receive_image: ",e)
+            return None
+        except:
+            print("Error in receive_image.")
+
 
         print("image_data: ", image_data)
 
