@@ -37,10 +37,7 @@ class ImageReceiverSocket:
                 if not packet:
                     raise Exception("Image data incomplete.")
                 image_data += packet
-        except Exception("Failed to receive image length.") as e:
-            print("Error in receive_image: ",e)
-            return None
-        except Exception("Image data incomplete.") as e:
+        except Exception as e:
             print("Error in receive_image: ",e)
             return None
         except:
