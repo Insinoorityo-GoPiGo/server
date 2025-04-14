@@ -73,7 +73,7 @@ class Control_Panel:
     
         self.app = Tk()
         self.app.title("Control Panel")
-        self.app.geometry("800x600")
+        self.app.geometry("900x600")
 
         self.b1 = Button(self.app, text="Start GPG1",command=self.start_gpg1_and_ssh,)
         self.b1.grid(row=3, column=0, padx=10, pady=10)
@@ -277,9 +277,9 @@ class Control_Panel:
         self.sub_btn_6.grid(row=70, column=2, pady=7)
         
     def image_analysis_field(self):
-        self.GPG_detection_analysis = Label(self.app, text='AI analysis from picture taken by GoPiGo', font=('Arial', 10)) #
+        self.GPG_detection_analysis = Label(self.app, text='AI analysis', font=('Arial', 10)) #
         self.GPG_detection_analysis.grid(row=0, column=3, padx=10, pady=5)
-        self.GPG_detection_analysis = Text(self.app, height=3, width=20, font=('Arial', 10), state="normal")
+        self.GPG_detection_analysis = Text(self.app, height=3, width=40, font=('Arial', 10), state="normal")
         self.GPG_detection_analysis.grid(row=0, column=4, padx=10, pady=5)
      
     def pause_gpg(self):
