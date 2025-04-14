@@ -26,7 +26,7 @@ class ImageReceiverSocket:
 
         try:
             if len(data_len_bytes) < 4:
-                raise ConnectionError("Failed to receive image length.")
+                raise Exception("Failed to receive image length.")
             
             image_len = struct.unpack('>I', data_len_bytes)[0]  # 4-byte big-endian integer
             print("image_len: ",image_len)
@@ -37,12 +37,12 @@ class ImageReceiverSocket:
                 packet = self.client_socket.recv(4096)
                 print("Packet received")
                 if not packet:
-                    raise ConnectionError("Image data incomplete.")
+                    raise Exception("Image data incomplete.")
                 image_data += packet
-        except ConnectionError("Failed to receive image length.") as e:
+        except Exception("Failed to receive image length.") as e:
             print("Error in receive_image: ",e)
             return None
-        except ConnectionError("Image data incomplete.") as e:
+        except Exception("Image data incomplete.") as e:
             print("Error in receive_image: ",e)
             return None
         except:
