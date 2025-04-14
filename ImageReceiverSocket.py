@@ -14,21 +14,27 @@ class ImageReceiverSocket:
     def open_connection(self):
         self.server_socket.listen(1) #Allow only 1 connection
         self.client_socket, self.client_address = self.server_socket.accept()
+        print("Image socket opened: ",self.client_socket, " ",self.client_address)
 
     def receive_image(self) -> bytes:
         #Receive 4 bytes indicating the size of the image
         data_len_bytes = self.client_socket.recv(4)
+        print("Image length received.")
         if len(data_len_bytes) < 4:
             raise ConnectionError("Failed to receive image length.")
 
         image_len = struct.unpack('>I', data_len_bytes)[0]  # 4-byte big-endian integer
+        print("image_len: ",image_len)
 
         #Receive the full image
         image_data = b''
         while len(image_data) < image_len:
             packet = self.client_socket.recv(4096)
+            print("Packet received")
             if not packet:
                 raise ConnectionError("Image data incomplete.")
             image_data += packet
+
+        print("image_data: ", image_data)
 
         return image_data  #in bytes
