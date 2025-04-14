@@ -2,7 +2,7 @@ import socket
 import struct
 
 class ImageReceiverSocket:
-    def __init__(self, host="127.0.0.1", port=1100):
+    def __init__(self, host="192.168.53.87", port=1100):
         self.HOST = host
         self.PORT = port
 

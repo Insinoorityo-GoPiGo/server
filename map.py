@@ -104,9 +104,9 @@ class Map:
                     #self.GPG_detection_analysis.set("")
                     self.GPG_detection_analysis.insert(index="1.0",chars=obstacle_description)
                 finally:
-                    print("In finally")
+                    pass
                     #self.GPG_detection_analysis.set("") #TODO: Here. You know what to do.
-                    self.GPG_detection_analysis.insert(index="1.0",chars="testing")
+                    #self.GPG_detection_analysis.insert(index="1.0",chars="testing")
 
                     #import tkinter
                     #tkinter.Text()
