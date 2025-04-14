@@ -16,7 +16,7 @@ class OpenaiAPI:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant who analyzes an image that is received from a storage room autonomouos sorting robot. The robot takes an image that you receive. If you see an obstacle in the image, you provide a 2-3 word description of the obstacle."
+                    "content": "You are a helpful assistant who analyzes an image that is received from a storage room autonomouos sorting robot. The robot takes an image that you receive. If you see an obstacle in the image, you provide a short one sentence description of the obstacle."
                 },
                 {
                     "role": "user",
