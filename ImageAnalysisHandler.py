@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import threading
 import base64
+import time
 
 from ImageReceiverSocket import ImageReceiverSocket
 from OpenaiAPI import OpenaiAPI
@@ -27,7 +28,11 @@ class ImageAnalysisHander:
         print("In ImageAnalysisHander logic_loop()")
         while True:
             image_as_bytes = self.image_receiver_socket.receive_image()
-            print("image_as_bytes received")
+            if image_as_bytes is None:
+                time.sleep(1)
+                continue
+            else:
+                print("image_as_bytes received")
 
             encoded = base64.b64encode(image_as_bytes).decode('utf-8')
 
