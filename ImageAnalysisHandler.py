@@ -19,6 +19,7 @@ class ImageAnalysisHander:
     def start(self):
         print("In ImageAnalysisHander start(), before open_connection()")
         self.image_receiver_socket.open_connection()
+
         threading.Thread(target=self.logic_loop, daemon=True).start()
         
     def logic_loop(self):
