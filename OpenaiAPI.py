@@ -16,7 +16,7 @@ class OpenaiAPI:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant who analyzes an image that is received from a storage room autonomouos sorting robot. The robot takes an image that you receive. You call the function, if you see an obstacle in the image. You provide a 2-3 word description of the obstacle as the obstacle parameter for the function."
+                    "content": "You are a helpful assistant who analyzes an image that is received from a storage room autonomouos sorting robot. The robot takes an image that you receive. If you see an obstacle in the image, you provide a 2-3 word description of the obstacle."
                 },
                 {
                     "role": "user",
@@ -38,7 +38,7 @@ class OpenaiAPI:
             max_tokens=200
         )
         
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
 
     def get_response(self, image_data) -> str:
         return self.prompt_openai(image_data=image_data)
