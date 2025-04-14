@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import threading
+import base64
 
 from ImageReceiverSocket import ImageReceiverSocket
 from OpenaiAPI import OpenaiAPI
@@ -11,7 +12,7 @@ class ImageAnalysisHander:
     def __init__(self, obstacle_description_queue):
         print("In ImageAnalysisHander init()")
         self.image_receiver_socket = ImageReceiverSocket(host=os.environ.get("IP_ADDRESS"), port=1100)
-        #self.openai_api = OpenaiAPI(api_key=os.environ.get("API_KEY"))
+        self.openai_api = OpenaiAPI(api_key=os.environ.get("API_KEY"))
 
         self.obstacle_description_queue = obstacle_description_queue
         print("ImageAnalysisHander init() complete.")
@@ -27,5 +28,9 @@ class ImageAnalysisHander:
         while True:
             image_as_bytes = self.image_receiver_socket.receive_image()
             print("image_as_bytes received")
-            #description = self.openai_api.get_response(image_data=image_as_bytes) #description of the object
+
+            encoded = base64.b64encode(image_as_bytes).decode('utf-8')
+
+            description = self.openai_api.get_response(image_data=encoded) #description of the object
+            print(description)
             #self.obstacle_description_queue.put(description)
