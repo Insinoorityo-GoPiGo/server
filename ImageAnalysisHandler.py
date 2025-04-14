@@ -33,4 +33,4 @@ class ImageAnalysisHander:
 
             description = self.openai_api.get_response(image_data=encoded) #description of the object
             print(description)
-            #self.obstacle_description_queue.put(description)
+            self.obstacle_description_queue.put(description)

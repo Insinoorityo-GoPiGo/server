@@ -22,8 +22,11 @@ class ImageReceiverSocket:
         #Receive 4 bytes indicating the size of the image
         data_len_bytes = self.client_socket.recv(4)
         print("Image length received.")
-        if len(data_len_bytes) < 4:
-            raise ConnectionError("Failed to receive image length.")
+        try:
+            if len(data_len_bytes) < 4:
+                raise ConnectionError("Failed to receive image length.")
+        except:
+            pass
 
         image_len = struct.unpack('>I', data_len_bytes)[0]  # 4-byte big-endian integer
         print("image_len: ",image_len)
