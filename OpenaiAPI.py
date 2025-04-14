@@ -16,14 +16,14 @@ class OpenaiAPI:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant who describes an image that is received from a storage room autonomouos sorting robot. The robot takes an image that you receive. If you see an obstacle in the image, you provide a 3-6 word description of the obstacle."
+                    "content": "You are a helpful assistant who describes an image that is received from a storage room autonomouos sorting robot. The robot takes an image that you receive. If you see an obstacle in the image, you provide a description consisting of 3 to 6 words for the obstacle."
                 },
                 {
                     "role": "user",
                     "content": [
                         {
                             "type": "text",
-                            "text": "Here's the image that you need to analyze."
+                            "text": "Here's the image that you need to analyze. Remember: 3 to 6 words."
                         },
                         {
                             "type": "image_url",
@@ -35,7 +35,7 @@ class OpenaiAPI:
                 },
             ],
             n=1,
-            max_tokens=200
+            max_tokens=50
         )
         
         return response.choices[0].message.content
