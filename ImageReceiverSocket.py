@@ -22,8 +22,6 @@ class ImageReceiverSocket:
         #Receive 4 bytes indicating the size of the image
         data_len_bytes = self.client_socket.recv(4)
 
-        print("Image length received, data_len_bytes: ",data_len_bytes)
-
         try:
             if len(data_len_bytes) < 4:
                 raise Exception("Failed to receive image length.")
