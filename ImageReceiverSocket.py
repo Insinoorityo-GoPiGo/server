@@ -13,7 +13,9 @@ class ImageReceiverSocket:
 
     def open_connection(self):
         self.server_socket.listen(1) #Allow only 1 connection
+        print("ImageReceiverSocket is listening")
         self.client_socket, self.client_address = self.server_socket.accept()
+        print("ImageReceiverSocket has accepted")
         print("Image socket opened: ",self.client_socket, " ",self.client_address)
 
     def receive_image(self) -> bytes:
