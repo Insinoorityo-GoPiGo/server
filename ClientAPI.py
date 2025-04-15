@@ -5,7 +5,6 @@ import re
 import threading
 
 from PathFinding import PathFinding
-from get_coordinates_and_edges import get_coordinates_and_edges
 
 class ClientAPI():
     def __init__(self, host, port, path, location_queue, rerouting_check, stop_pause_event, default_direction="east", bot_id="gopigo_1"):     

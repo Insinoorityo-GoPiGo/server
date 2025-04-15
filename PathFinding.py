@@ -1,5 +1,3 @@
-from typing import Union
-
 from Graph import Graph
 
 class PathFinding:

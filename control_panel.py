@@ -277,7 +277,7 @@ class Control_Panel:
         self.sub_btn_6.grid(row=70, column=2, pady=7)
         
     def image_analysis_field(self):
-        self.GPG_detection_analysis = Label(self.app, text='AI analysis', font=('Arial', 10)) #
+        self.GPG_detection_analysis = Label(self.app, text='AI analysis', font=('Arial', 10))
         self.GPG_detection_analysis.grid(row=0, column=3, padx=10, pady=5)
         self.GPG_detection_analysis = Text(self.app, height=3, width=40, font=('Arial', 10), state="normal")
         self.GPG_detection_analysis.grid(row=0, column=4, padx=10, pady=5)
@@ -363,13 +363,10 @@ class Control_Panel:
 
     def remove_edge(self, target_edge: tuple):
         #Pysäytetään socketin toiminta
-        print("remove_edge alussa")
-        
         for key in self.rerouting_check:
             print("key: ",key)
             self.rerouting_check[key]["event"].set()
             print("Is set")
-            
 
         #Poistetaan edge
         node_1, node_2 = target_edge

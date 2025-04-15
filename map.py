@@ -4,9 +4,6 @@ from queue import Empty
 import copy
 from tkinter import END
 
-#import tkinter
-#tkinter.StringVar().
-
 from get_coordinates_and_edges import get_coordinates_and_edges
 
 class Map:
@@ -75,8 +72,6 @@ class Map:
                     self.highlight_node_gpg_1 = location["node"] #Is the highlighted node
                 elif location["id"] == "gopigo_2":
                     self.highlight_node_gpg_2 = location["node"]
-                
-        self.update_graph()
 
     def get_location(self, queue) -> dict|None:
         location = object()
@@ -84,7 +79,6 @@ class Map:
         try:
             location = queue.get(block=False)
         except Empty:
-            #print("Jono on tyhjä")
             location = None
 
         return location
@@ -101,12 +95,7 @@ class Map:
                 except Empty:
                     pass
                 else:
-                    #self.GPG_detection_analysis.set("")
                     self.GPG_detection_analysis.insert(index="1.0",chars=obstacle_description)
-                finally:
-                    pass
-                    #self.GPG_detection_analysis.set("") #TODO: Here. You know what to do.
-                    #self.GPG_detection_analysis.insert(index="1.0",chars="testing")
                 
                 client_locations = (
                     location 
@@ -119,6 +108,7 @@ class Map:
                 )
 
                 self.set_highlight(client_locations=client_locations)
+                self.update_graph()
                 
         except KeyboardInterrupt:
             plt.close('all')
@@ -130,22 +120,3 @@ class Map:
 
         plt.ioff()
         plt.show()
-        
-
-
-
-
-
-
-
-#Unused as of now
-    def update_map(self):
-        server_input = self.get_location(queue=self.location_queue_1)
-
-        if server_input:
-            self.set_highlight(location=server_input)
-
-        plt.pause(0.1)
-        self.fig.canvas.flush_events()
-
-        self.fig.canvas.get_tk_widget().after(500, self.update_map)
