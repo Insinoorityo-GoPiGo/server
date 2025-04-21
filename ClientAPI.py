@@ -207,10 +207,11 @@ class ClientAPI():
 
             cardinal_direction = self.check_next_node() #Where the next node is: north (1), east (2), south (3), west (4)
 
-            if not self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
+            if self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
+                self.drive_forward()
+            else:
                 self.turn_gopigo(where_from=self.gopigo_direction, to_where=cardinal_direction)
-                
-            self.drive_forward()
+                self.drive_forward()
             
             self.update_location() #Markereita yks pykälä eteen päin
 
