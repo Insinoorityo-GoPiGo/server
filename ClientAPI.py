@@ -203,27 +203,18 @@ class ClientAPI():
             self.send_location_to_map() #laitetaan dictionary, jossa on bot_id ja current_node mapiin
 
             if node == self.path[-1]:
-                print("Goal reached.")
-                break
+                break #Goal reached
 
             cardinal_direction = self.check_next_node() #Where the next node is: north (1), east (2), south (3), west (4)
 
-            if self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
-                print("GoPiGo is facing the next node.")
-                self.drive_forward()
-            else:
-                print("GoPiGo had to turn, then is going to drive.")
+            if not self.is_gopigo_facing_next_node(cardinal_direction=cardinal_direction):
                 self.turn_gopigo(where_from=self.gopigo_direction, to_where=cardinal_direction)
-                print("GoPiGo will drive forward.")
-                self.drive_forward()
-                print("GoPiGo has driven forward after turning.")
+                
+            self.drive_forward()
             
             self.update_location() #Markereita yks pykälä eteen päin
 
-            print("Location markers have been updated.")
-
             if self.rerouting_check[self.ID]["event"].is_set():
-                print("rerouting_check is set")
                 self.rerouting_check[self.ID]["event"].clear()
 
                 break_from_logic_loop = False
@@ -231,22 +222,16 @@ class ClientAPI():
                 for i in range(len(self.path) - 1):
                     edge = (self.path[i], self.path[i + 1])
                     reversed_edge = (self.path[i + 1], self.path[i])
+
                     if edge in PathFinding.removed_edges or reversed_edge in PathFinding.removed_edges:
                         break_from_logic_loop = True
 
-                        print("Removed edge found in path:", edge)
                         self.state = "REROUTED_FROM_CURRENT_TO_DESTINATION"
                         break
                 if break_from_logic_loop == True:
                     break
 
-                if break_from_logic_loop == True:
-                    break
-
-                
-
             self.client_stop_pause_event[self.ID]["event"].wait() #if is set, this doesn't wait
-            print("After client_stop_pause_event wait")
 
         if self.state == "STARTED":
             self.state = "DRIVE_BACK"
